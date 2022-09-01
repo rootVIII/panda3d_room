@@ -16,6 +16,7 @@ class Panda3dWalking(ShowBase):
         self.scene = self.loader.load_model('assets/Home2_Night.bam')
         self.scene.reparent_to(self.render)
 
+        # instancing: https://docs.panda3d.org/1.10/python/programming/scene-graph/instancing
         # https://docs.panda3d.org/1.10/python/programming/scene-graph/searching-scene-graph
         # self.scene.ls()
         print(self.scene.find('CoffeeTable'))
@@ -86,60 +87,86 @@ class Panda3dWalking(ShowBase):
 
         self.soldier.enable_blend()
 
-        self.idle_walk = LerpAnimInterval(self.soldier, 0.25, 'Idle', 'Walk')
-        self.walk_idle = LerpAnimInterval(self.soldier, 0.25, 'Walk', 'Idle')
-
-        self.idle_walkback = LerpAnimInterval(self.soldier, 0.25, 'Idle', 'WalkBack')
-        self.walkback_idle = LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Idle')
-
-        self.idle_run = LerpAnimInterval(self.soldier, 0.25, 'Idle', 'Run')
-        self.run_idle = LerpAnimInterval(self.soldier, 0.25, 'Run', 'Idle')
-
-        self.run_walk = LerpAnimInterval(self.soldier, 0.25, 'Run', 'Walk')
-        self.walk_run = LerpAnimInterval(self.soldier, 0.25, 'Walk', 'Run')
-
-        self.idle_punch = LerpAnimInterval(self.soldier, 0.25, 'Idle', 'Punch')
-        self.punch_idle = LerpAnimInterval(self.soldier, 0.25, 'Punch', 'Idle')
-
-        self.run_punch = LerpAnimInterval(self.soldier, 0.25, 'Run', 'Punch')
-        self.punch_run = LerpAnimInterval(self.soldier, 0.25, 'Punch', 'Run')
-
-        self.walk_punch = LerpAnimInterval(self.soldier, 0.25, 'Walk', 'Punch')
-        self.punch_walk = LerpAnimInterval(self.soldier, 0.25, 'Punch', 'Walk')
-
-        self.walkback_punch = LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Punch')
-        self.punch_walkback = LerpAnimInterval(self.soldier, 0.25, 'Punch', 'WalkBack')
-
-        self.walkback_run = LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Run')
-        self.run_walkback = LerpAnimInterval(self.soldier, 0.25, 'Run', 'WalkBack')
-
-        self.walkback_walk = LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Walk')
-        self.walk_walkback = LerpAnimInterval(self.soldier, 0.25, 'Walk', 'WalkBack')
-
-        # self.task_mgr.add(self.get_mouse_coords_task, 'GetMouseCoordsTask')
-        self.printing_coords = False
-
         self.animations = {
-            'idle_walk': {'is_current': False, 'lerp': self.idle_walk},
-            'walk_idle': {'is_current': True, 'lerp': self.walk_idle},
-            'idle_walkback': {'is_current': False, 'lerp': self.idle_walkback},
-            'walkback_idle': {'is_current': False, 'lerp': self.walkback_idle},
-            'idle_run': {'is_current': False, 'lerp': self.idle_run},
-            'run_idle': {'is_current': False, 'lerp': self.run_idle},
-            'run_walk': {'is_current': False, 'lerp': self.run_walk},
-            'walk_run': {'is_current': False, 'lerp': self.walk_run},
-            'idle_punch': {'is_current': False, 'lerp': self.idle_punch},
-            'punch_idle': {'is_current': False, 'lerp': self.punch_idle},
-            'run_punch': {'is_current': False, 'lerp': self.run_punch},
-            'punch_run': {'is_current': False, 'lerp': self.punch_run},
-            'walk_punch': {'is_current': False, 'lerp': self.walk_punch},
-            'punch_walk': {'is_current': False, 'lerp': self.punch_walk},
-            'walkback_punch': {'is_current': False, 'lerp': self.walkback_punch},
-            'punch_walkback': {'is_current': False, 'lerp': self.punch_walkback},
-            'walkback_run': {'is_current': False, 'lerp': self.walkback_run},
-            'run_walkback': {'is_current': False, 'lerp': self.run_walkback},
-            'walkback_walk': {'is_current': False, 'lerp': self.walkback_walk},
-            'walk_walkback': {'is_current': False, 'lerp': self.walk_walkback},
+            'idle_walk': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Idle', 'Walk')
+            },
+            'walk_idle': {
+                'is_current': True,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Walk', 'Idle')
+            },
+            'idle_walkback': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Idle', 'WalkBack')
+            },
+            'walkback_idle': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Idle')},
+            'idle_run': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Idle', 'Run')
+            },
+            'run_idle': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Run', 'Idle')
+            },
+            'run_walk': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Run', 'Walk')
+            },
+            'walk_run': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Walk', 'Run')
+            },
+            'idle_punch': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Idle', 'Punch')
+            },
+            'punch_idle': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Punch', 'Idle')
+            },
+            'run_punch': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Run', 'Punch')
+            },
+            'punch_run': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Punch', 'Run')
+            },
+            'walk_punch': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Walk', 'Punch')
+            },
+            'punch_walk': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Punch', 'Walk')
+            },
+            'walkback_punch': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Punch')
+            },
+            'punch_walkback': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Punch', 'WalkBack')
+            },
+            'walkback_run': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Run')
+            },
+            'run_walkback': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Run', 'WalkBack')
+            },
+            'walkback_walk': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Walk')
+            },
+            'walk_walkback': {
+                'is_current': False,
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Walk', 'WalkBack')
+            }
         }
 
     def finish_running_lerps(self):
