@@ -16,6 +16,12 @@ class Panda3dWalking(ShowBase):
         self.scene = self.loader.load_model('assets/Home2_Night.bam')
         self.scene.reparent_to(self.render)
 
+        # https://docs.panda3d.org/1.10/python/programming/scene-graph/searching-scene-graph
+        # self.scene.ls()
+        print(self.scene.find('CoffeeTable'))
+        coffee_table_pos = self.scene.find('CoffeeTable').get_pos()
+        print(coffee_table_pos[0])
+
         amb_light = AmbientLight('ambient')
         amb_light.set_color((0.5, 0.4, 0.4, 1.0))  # noqa
         ambient_light_node = self.render.attach_new_node(amb_light)
@@ -38,6 +44,8 @@ class Panda3dWalking(ShowBase):
         self.soldier.reparent_to(self.render)  # noqa
 
         self.soldier.set_pos(3.0, 4.0, -0.5)  # noqa
+        # self.soldier.set_pos(coffee_table_pos)  # noqa
+
         self.soldier.set_scale(4, 4, 4)  # noqa
 
         self.soldier.loop('Idle')
@@ -108,7 +116,7 @@ class Panda3dWalking(ShowBase):
         self.walkback_walk = LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Walk')
         self.walk_walkback = LerpAnimInterval(self.soldier, 0.25, 'Walk', 'WalkBack')
 
-        self.task_mgr.add(self.get_mouse_coords_task, 'GetMouseCoordsTask')
+        # self.task_mgr.add(self.get_mouse_coords_task, 'GetMouseCoordsTask')
         self.printing_coords = False
 
         self.animations = {
@@ -182,17 +190,18 @@ class Panda3dWalking(ShowBase):
         self.soldier_heading -= 5
         self.soldier.set_h(self.soldier_heading)  # noqa
 
-    def get_mouse_coords_task(self, task):
-        current = int(task.time) % 5
-        if not self.printing_coords and current == 0:
-            self.printing_coords = True
-            print('%f, %f, %f' % (self.camera.get_x(),
-                                  self.camera.get_y(),
-                                  self.camera.get_z()))
-        if current != 0:
-            self.printing_coords = False
+    # def get_mouse_coords_task(self, task):
+    #     current = int(task.time) % 5
+    #     if not self.printing_coords and current == 0:
+    #         self.printing_coords = True
+    #         print('%f, %f, %f' % (self.camera.get_x(),
+    #                               self.camera.get_y(),
+    #                               self.camera.get_z()))
+    #     if current != 0:
+    #         self.printing_coords = False
+    #
+    #     return Task.cont
 
-        return Task.cont
 
 if __name__ == '__main__':
     app = Panda3dWalking()
