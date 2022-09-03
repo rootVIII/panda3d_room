@@ -22,6 +22,7 @@ class Panda3dWalking(ShowBase):
         print(self.scene.find('CoffeeTable'))
         coffee_table_pos = self.scene.find('CoffeeTable').get_pos()
         print(coffee_table_pos[0])
+        coffee_table_pos[0] += 5
 
         amb_light = AmbientLight('ambient')
         amb_light.set_color((0.5, 0.4, 0.4, 1.0))  # noqa
@@ -44,8 +45,8 @@ class Panda3dWalking(ShowBase):
         self.soldier = Actor('assets/soldierx.bam')
         self.soldier.reparent_to(self.render)  # noqa
 
-        self.soldier.set_pos(3.0, 4.0, -0.5)  # noqa
-        # self.soldier.set_pos(coffee_table_pos)  # noqa
+        # self.soldier.set_pos(3.0, 4.0, -0.5)  # noqa
+        self.soldier.set_pos(coffee_table_pos)  # noqa
 
         self.soldier.set_scale(4, 4, 4)  # noqa
 
