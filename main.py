@@ -147,6 +147,9 @@ class Panda3dWalking(ShowBase):
         self.p = KeyboardButton.ascii_key('p')  # noqa
         self.shift = KeyboardButton.shift()  # noqa
 
+        self.tmp_node = self.render.attach_new_node('cam-%s' % self.soldier.get_name())  # noqa
+        self.turn_rate = 1.5
+
     def finish_running_lerps(self):
         _ = [lerp['lerp'].finish() for _, lerp in self.animations.items()  # noqa
              if lerp['lerp'].is_playing()]  # noqa
@@ -204,9 +207,26 @@ class Panda3dWalking(ShowBase):
         else:
             self.stop()
 
+    def move_soldier(self):
+        _, action = self.current_action.split('_')
+        if action == 'Walk':
+            self.soldier.set_y(self.soldier, 0.05)
+        elif action == 'WalkBack':
+            self.soldier.set_y(self.soldier, -0.01)
+        elif action == 'Run':
+            self.soldier.set_y(self.soldier, 0.2)
+
+        self.soldier.set_h(self.soldier_heading)  # noqa
+        self.tmp_node.set_pos(self.soldier.get_pos())  # noqa
+        heading = self.tmp_node.get_h()
+        turn_diff = self.soldier.get_h() - heading  # noqa
+        self.tmp_node.set_h(heading + turn_diff * self.turn_rate)
+        self.camera.reparent_to(self.tmp_node)
+
     def update(self, task):
         _ = task
         self.check_keys()
+        self.move_soldier()
         return Task.cont
 
 
