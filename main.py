@@ -16,12 +16,10 @@ class Panda3dWalking(ShowBase):
         self.scene = self.loader.load_model('assets/Home2_Night.bam')
         self.scene.reparent_to(self.render)
 
-        # instancing: https://docs.panda3d.org/1.10/python/programming/scene-graph/instancing
-        # https://docs.panda3d.org/1.10/python/programming/scene-graph/searching-scene-graph
         # self.scene.ls()
-        print(self.scene.find('CoffeeTable'))
+        # print(self.scene.find('CoffeeTable'))
         new_soldier_pos = self.scene.find('CoffeeTable').get_pos()
-        print(new_soldier_pos[0])
+        # print(new_soldier_pos[0])
         new_soldier_pos[0] += 5
 
         amb_light = AmbientLight('ambient')
