@@ -165,31 +165,24 @@ class Panda3dWalking(ShowBase):
 
     def walk_forward(self):
         self.animate_soldier('Walk')
-        print('Walk')
 
     def run_forward(self):
         self.animate_soldier('Run')
-        print('Run')
 
     def walk_backward(self):
         self.animate_soldier('WalkBack')
-        print('WalkBack')
 
     def stop(self):
-        print('Idle')
         self.animate_soldier('Idle')
 
     def punch(self):
-        print('Punch')
         self.animate_soldier('Punch')
 
     def turn_left(self):
-        print('Turn LEFT')
         self.soldier_heading += 3
         self.soldier.set_h(self.soldier_heading)  # noqa
 
     def turn_right(self):
-        print('Turn RIGHT')
         self.soldier_heading -= 3
         self.soldier.set_h(self.soldier_heading)  # noqa
 
