@@ -150,9 +150,6 @@ class Panda3dWalking(ShowBase):
     def finish_running_lerps(self):
         _ = [lerp['lerp'].finish() for _, lerp in self.animations.items()  # noqa
              if lerp['lerp'].is_playing()]  # noqa
-        # for _, lerp_details in self.animations.items():
-        #     if lerp_details['lerp'].is_playing():  # noqa
-        #         lerp_details['lerp'].finish()
 
     def animate_soldier(self, new_action):
         _, old_action = self.current_action.split('_')
