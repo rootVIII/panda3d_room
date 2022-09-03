@@ -1,6 +1,6 @@
-from direct.actor.Actor import Actor, DirectionalLight, Spotlight # noqa
-from direct.actor.Actor import AmbientLight, PointLight, PerspectiveLens # noqa
-from direct.showbase.ShowBase import ShowBase
+from direct.actor.Actor import Actor, DirectionalLight, Spotlight  # noqa
+from direct.actor.Actor import AmbientLight, PointLight, PerspectiveLens  # noqa
+from direct.showbase.ShowBase import ShowBase, KeyboardButton  # noqa
 from direct.interval.IntervalGlobal import LerpAnimInterval
 from direct.task import Task
 # Convert glb/gltf to .bam:
@@ -69,165 +69,155 @@ class Panda3dWalking(ShowBase):
         # self.render.set_light(spot_light_node)  # noqa
         # self.render.set_shader_auto()
 
-        self.camera.set_pos(0, -24, 5.7)
-
-        self.accept('arrow_up', self.walk_forward)
-        self.accept('arrow_down', self.walk_backward)
-
-        self.accept('arrow_up-up', self.stop)
-        self.accept('arrow_down-up', self.stop)
-        self.accept('control-arrow_up', self.run_forward)
-
-        self.accept('arrow_left-repeat', self.turn_left)
-        self.accept('arrow_right-repeat', self.turn_right)
-
-        self.accept('p', self.punch)
-
         self.soldier_heading = 0
-
         self.soldier.enable_blend()
 
+        self.camera.set_pos(0, -24, 5.7)
+
+        self.task_mgr.add(self.update, 'Update')
+        self.is_down = self.mouseWatcherNode.is_button_down
+
+        self.current_action = 'Walk_Idle'
         self.animations = {
-            'idle_walk': {
-                'is_current': False,
+            'Idle_Walk': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Idle', 'Walk')
             },
-            'walk_idle': {
-                'is_current': True,
+            'Walk_Idle': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Walk', 'Idle')
             },
-            'idle_walkback': {
-                'is_current': False,
+            'Idle_WalkBack': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Idle', 'WalkBack')
             },
-            'walkback_idle': {
-                'is_current': False,
+            'WalkBack_Idle': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Idle')},
-            'idle_run': {
-                'is_current': False,
+            'Idle_Run': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Idle', 'Run')
             },
-            'run_idle': {
-                'is_current': False,
+            'Run_Idle': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Run', 'Idle')
             },
-            'run_walk': {
-                'is_current': False,
+            'Run_Walk': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Run', 'Walk')
             },
-            'walk_run': {
-                'is_current': False,
+            'Walk_Run': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Walk', 'Run')
             },
-            'idle_punch': {
-                'is_current': False,
+            'Idle_Punch': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Idle', 'Punch')
             },
-            'punch_idle': {
-                'is_current': False,
+            'Punch_Idle': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Punch', 'Idle')
             },
-            'run_punch': {
-                'is_current': False,
+            'Run_Punch': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Run', 'Punch')
             },
-            'punch_run': {
-                'is_current': False,
+            'Punch_Run': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Punch', 'Run')
             },
-            'walk_punch': {
-                'is_current': False,
+            'Walk_Punch': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Walk', 'Punch')
             },
-            'punch_walk': {
-                'is_current': False,
+            'Punch_Walk': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Punch', 'Walk')
             },
-            'walkback_punch': {
-                'is_current': False,
+            'WalkBack_Punch': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Punch')
             },
-            'punch_walkback': {
-                'is_current': False,
+            'Punch_WalkBack': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Punch', 'WalkBack')
             },
-            'walkback_run': {
-                'is_current': False,
+            'WalkBack_Run': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Run')
             },
-            'run_walkback': {
-                'is_current': False,
+            'Run_WalkBack': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Run', 'WalkBack')
             },
-            'walkback_walk': {
-                'is_current': False,
+            'WalkBack_Walk': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Walk')
             },
-            'walk_walkback': {
-                'is_current': False,
+            'Walk_WalkBack': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Walk', 'WalkBack')
             }
         }
 
+        self.up = KeyboardButton.up()  # noqa
+        self.down = KeyboardButton.down()  # noqa
+        self.left = KeyboardButton.left()  # noqa
+        self.right = KeyboardButton.right()  # noqa
+        self.p = KeyboardButton.ascii_key('p')  # noqa
+        self.shift = KeyboardButton.shift()  # noqa
+
     def finish_running_lerps(self):
-        for _, lerp_details in self.animations.items():
-            if lerp_details['lerp'].is_playing():  # noqa
-                lerp_details['lerp'].finish()  # noqa
+        _ = [lerp['lerp'].finish() for _, lerp in self.animations.items()  # noqa
+             if lerp['lerp'].is_playing()]  # noqa
+        # for _, lerp_details in self.animations.items():
+        #     if lerp_details['lerp'].is_playing():  # noqa
+        #         lerp_details['lerp'].finish()
 
-    def move_soldier(self, action):
-        self.finish_running_lerps()
-        new_action = action.lower()
+    def animate_soldier(self, new_action):
+        _, old_action = self.current_action.split('_')
+        if old_action != new_action:
+            self.finish_running_lerps()
+            self.current_action = f'{old_action}_{new_action}'
+            self.animations[self.current_action]['lerp'].start()  # noqa
 
-        for key, val in self.animations.items():
-            if val['is_current'] is True:
-                _, old_action = key.split('_')
-                if old_action == new_action:
-                    continue
-                next_direction = '%s_%s' % (old_action, new_action)
-                self.animations[next_direction]['is_current'] = True
-                self.animations[next_direction]['lerp'].start()  # noqa
-                self.animations[key]['is_current'] = False
-                break
-
-        if new_action != 'punch':
-            self.soldier.loop(action)
-        else:
-            self.soldier.play(action)
+            if new_action != 'Punch':
+                self.soldier.loop(new_action)
+            else:
+                self.soldier.play(new_action)
 
     def walk_forward(self):
-        self.move_soldier('Walk')
+        self.animate_soldier('Walk')
+        print('Walk')
 
     def run_forward(self):
-        self.move_soldier('Run')
+        self.animate_soldier('Run')
+        print('Run')
 
     def walk_backward(self):
-        self.move_soldier('WalkBack')
+        self.animate_soldier('WalkBack')
+        print('WalkBack')
 
     def stop(self):
-        self.move_soldier('Idle')
+        print('Idle')
+        self.animate_soldier('Idle')
 
     def punch(self):
-        self.move_soldier('Punch')
+        print('Punch')
+        self.animate_soldier('Punch')
 
     def turn_left(self):
-        self.soldier_heading += 5
+        print('Turn LEFT')
+        self.soldier_heading += 3
         self.soldier.set_h(self.soldier_heading)  # noqa
 
     def turn_right(self):
-        self.soldier_heading -= 5
+        print('Turn RIGHT')
+        self.soldier_heading -= 3
         self.soldier.set_h(self.soldier_heading)  # noqa
 
-    # def get_mouse_coords_task(self, task):
-    #     current = int(task.time) % 5
-    #     if not self.printing_coords and current == 0:
-    #         self.printing_coords = True
-    #         print('%f, %f, %f' % (self.camera.get_x(),
-    #                               self.camera.get_y(),
-    #                               self.camera.get_z()))
-    #     if current != 0:
-    #         self.printing_coords = False
-    #
-    #     return Task.cont
+    def check_keys(self):
+        if self.is_down(self.left):
+            self.turn_left()
+        if self.is_down(self.right):
+            self.turn_right()
+
+        if self.is_down(self.up):
+            if self.is_down(self.shift):
+                self.run_forward()
+            else:
+                self.walk_forward()
+        elif self.is_down(self.down):
+            self.walk_backward()
+        elif self.is_down(self.p):
+            self.punch()
+        else:
+            self.stop()
+
+    def update(self, task):
+        _ = task
+        self.check_keys()
+        return Task.cont
 
 
 if __name__ == '__main__':
