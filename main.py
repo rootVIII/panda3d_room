@@ -72,7 +72,8 @@ class Panda3dWalking(ShowBase):
         self.soldier_heading = 0
         self.soldier.enable_blend()
 
-        self.camera.set_pos(0, -24, 5.7)
+        self.camera.set_pos(0, -20, 9.7)
+        self.camera.set_p(-15)
 
         self.task_mgr.add(self.update, 'Update')
         self.is_down = self.mouseWatcherNode.is_button_down
