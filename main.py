@@ -3,7 +3,7 @@ from direct.showbase.ShowBase import ShowBase
 from panda3d.core import KeyboardButton, AmbientLight, PointLight
 from panda3d.core import DirectionalLight  # , Spotlight, PerspectiveLens
 from panda3d.core import CollisionNode, CollisionBox, CollisionCapsule
-# from panda3d.core import CollisionTraverser, CollisionHandlerPusher
+from panda3d.core import CollisionTraverser, CollisionHandlerPusher
 from direct.interval.IntervalGlobal import LerpAnimInterval
 from direct.task import Task
 # Convert glb/gltf to .bam:
@@ -19,6 +19,9 @@ class Panda3dWalking(ShowBase):
 
         self.scene = self.loader.load_model('assets/Home2_Night.bam')
         self.scene.reparent_to(self.render)
+
+        self.cTrav = CollisionTraverser()
+        self.pusher = CollisionHandlerPusher()
 
         amb_light = AmbientLight('ambient')
         amb_light.set_color((0.5, 0.4, 0.4, 1.0))  # noqa
@@ -54,6 +57,8 @@ class Panda3dWalking(ShowBase):
         soldier_cnode = self.soldier.attach_new_node(CollisionNode('soldier_cnode'))
         soldier_cnode.node().add_solid(capsule)
         soldier_cnode.show()
+        self.pusher.add_collider(soldier_cnode, self.soldier)
+        self.cTrav.add_collider(soldier_cnode, self.pusher)
 
         point_light = PointLight('point')
         point_light.set_color_temperature(6500)
@@ -242,6 +247,8 @@ class Panda3dWalking(ShowBase):
         coffee_table_node = coffee_table.attach_new_node(CollisionNode('coffee_table_cnode'))
         coffee_table_node.node().add_solid(box)
         coffee_table_node.show()
+        self.pusher.add_collider(coffee_table_node, coffee_table)  # noqa
+        self.cTrav.add_collider(coffee_table_node, self.pusher)  # noqa
 
 
 if __name__ == '__main__':
