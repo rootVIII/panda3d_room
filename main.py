@@ -37,7 +37,6 @@ class Panda3dWalking(ShowBase):
         # remove this to use mouse left, middle, and right btns to position
         self.disable_mouse()
 
-        # Apply scale and position transforms on the model.
         self.scene.set_scale(4, 4, 4)
         self.scene.set_pos(0, 0, 0)
 
