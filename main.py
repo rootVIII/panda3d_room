@@ -1,8 +1,9 @@
 from direct.actor.Actor import Actor
 from direct.showbase.ShowBase import ShowBase
 from panda3d.core import KeyboardButton, AmbientLight, PointLight
-from panda3d.core import DirectionalLight, Spotlight, PerspectiveLens
-from panda3d.core import CollisionNode, CollisionBox
+from panda3d.core import DirectionalLight  # , Spotlight, PerspectiveLens
+from panda3d.core import CollisionNode, CollisionBox, CollisionCapsule
+# from panda3d.core import CollisionTraverser, CollisionHandlerPusher
 from direct.interval.IntervalGlobal import LerpAnimInterval
 from direct.task import Task
 # Convert glb/gltf to .bam:
@@ -18,13 +19,6 @@ class Panda3dWalking(ShowBase):
 
         self.scene = self.loader.load_model('assets/Home2_Night.bam')
         self.scene.reparent_to(self.render)
-
-        # self.scene.ls()
-        self.set_collision_nodes()
-        # print(self.scene.find('CoffeeTable'))
-        new_soldier_pos = self.scene.find('CoffeeTable').get_pos()
-        # print(new_soldier_pos[0])
-        new_soldier_pos[0] += 5
 
         amb_light = AmbientLight('ambient')
         amb_light.set_color((0.5, 0.4, 0.4, 1.0))  # noqa
@@ -47,12 +41,19 @@ class Panda3dWalking(ShowBase):
         self.soldier = Actor('assets/soldierx.bam')
         self.soldier.reparent_to(self.render)
 
-        # self.soldier.set_pos(3.0, 4.0, -0.5)
+        new_soldier_pos = self.scene.find('CoffeeTable').get_pos()
+        new_soldier_pos[0] += 5
         self.soldier.set_pos(new_soldier_pos)
 
         self.soldier.set_scale(4, 4, 4)
 
         self.soldier.loop('Idle')
+
+        self.set_scene_collision_nodes()
+        capsule = CollisionCapsule(0, 0, 0.4, 0, 0, 1.3, 0.4)
+        soldier_cnode = self.soldier.attach_new_node(CollisionNode('soldier_cnode'))
+        soldier_cnode.node().add_solid(capsule)
+        soldier_cnode.show()
 
         point_light = PointLight('point')
         point_light.set_color_temperature(6500)
@@ -234,13 +235,13 @@ class Panda3dWalking(ShowBase):
         self.move_soldier()
         return Task.cont
 
-    def set_collision_nodes(self):
+    def set_scene_collision_nodes(self):
         # self.scene.ls()
         coffee_table = self.scene.find('CoffeeTable')
         box = CollisionBox(coffee_table.get_pos()[0], 0.6, 1.4, 0.6)
-        cnode = coffee_table.attach_new_node(CollisionNode('cnode'))
-        cnode.node().add_solid(box)
-        cnode.show()
+        coffee_table_node = coffee_table.attach_new_node(CollisionNode('coffee_table_cnode'))
+        coffee_table_node.node().add_solid(box)
+        coffee_table_node.show()
 
 
 if __name__ == '__main__':
