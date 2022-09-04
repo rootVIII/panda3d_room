@@ -1,6 +1,8 @@
-from direct.actor.Actor import Actor, DirectionalLight, Spotlight  # noqa
-from direct.actor.Actor import AmbientLight, PointLight, PerspectiveLens  # noqa
-from direct.showbase.ShowBase import ShowBase, KeyboardButton, CollisionBox, CollisionNode  # noqa
+from direct.actor.Actor import Actor
+from direct.showbase.ShowBase import ShowBase
+from panda3d.core import KeyboardButton, AmbientLight, PointLight
+from panda3d.core import DirectionalLight, Spotlight, PerspectiveLens
+from panda3d.core import CollisionNode, CollisionBox
 from direct.interval.IntervalGlobal import LerpAnimInterval
 from direct.task import Task
 # Convert glb/gltf to .bam:
