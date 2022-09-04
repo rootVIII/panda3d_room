@@ -235,6 +235,7 @@ class Panda3dWalking(ShowBase):
         return Task.cont
 
     def set_scene_collision_nodes(self):
+        # self.scene.ls()
         capsule = CollisionCapsule(0, 0, 0.4, 0, 0, 1.3, 0.45)
         soldier_cnode = self.soldier.attach_new_node(CollisionNode('soldier_cnode'))  # noqa
         soldier_cnode.node().add_solid(capsule)
@@ -242,7 +243,6 @@ class Panda3dWalking(ShowBase):
         self.pusher.add_collider(soldier_cnode, self.soldier)  # noqa
         self.cTrav.add_collider(soldier_cnode, self.pusher)  # noqa
 
-        # self.scene.ls()
         coffee_table = self.scene.find('CoffeeTable')
         box = CollisionBox(coffee_table.get_pos()[0], 0.6, 1.4, 0.6)
         coffee_table_node = coffee_table.attach_new_node(CollisionNode('coffee_table_cnode'))
