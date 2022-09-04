@@ -89,7 +89,8 @@ class Panda3dWalking(ShowBase):
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Idle', 'WalkBack')
             },
             'WalkBack_Idle': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Idle')},
+                'lerp': LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Idle')
+            },
             'Idle_Run': {
                 'lerp': LerpAnimInterval(self.soldier, 0.25, 'Idle', 'Run')
             },
