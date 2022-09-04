@@ -53,12 +53,6 @@ class Panda3dWalking(ShowBase):
         self.soldier.loop('Idle')
 
         self.set_scene_collision_nodes()
-        capsule = CollisionCapsule(0, 0, 0.4, 0, 0, 1.3, 0.4)
-        soldier_cnode = self.soldier.attach_new_node(CollisionNode('soldier_cnode'))
-        soldier_cnode.node().add_solid(capsule)
-        soldier_cnode.show()
-        self.pusher.add_collider(soldier_cnode, self.soldier)
-        self.cTrav.add_collider(soldier_cnode, self.pusher)
 
         point_light = PointLight('point')
         point_light.set_color_temperature(6500)
@@ -241,6 +235,13 @@ class Panda3dWalking(ShowBase):
         return Task.cont
 
     def set_scene_collision_nodes(self):
+        capsule = CollisionCapsule(0, 0, 0.4, 0, 0, 1.3, 0.45)
+        soldier_cnode = self.soldier.attach_new_node(CollisionNode('soldier_cnode'))  # noqa
+        soldier_cnode.node().add_solid(capsule)
+        soldier_cnode.show()
+        self.pusher.add_collider(soldier_cnode, self.soldier)  # noqa
+        self.cTrav.add_collider(soldier_cnode, self.pusher)  # noqa
+
         # self.scene.ls()
         coffee_table = self.scene.find('CoffeeTable')
         box = CollisionBox(coffee_table.get_pos()[0], 0.6, 1.4, 0.6)
