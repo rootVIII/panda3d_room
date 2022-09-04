@@ -10,6 +10,7 @@ from direct.task import Task
 
 class Panda3dWalking(ShowBase):
 
+    # noinspection PyArgumentList
     def __init__(self):
         ShowBase.__init__(self)
 
@@ -41,20 +42,20 @@ class Panda3dWalking(ShowBase):
         self.scene.set_pos(0, 0, 0)
 
         self.soldier = Actor('assets/soldierx.bam')
-        self.soldier.reparent_to(self.render)  # noqa
+        self.soldier.reparent_to(self.render)
 
-        # self.soldier.set_pos(3.0, 4.0, -0.5)  # noqa
-        self.soldier.set_pos(new_soldier_pos)  # noqa
+        # self.soldier.set_pos(3.0, 4.0, -0.5)
+        self.soldier.set_pos(new_soldier_pos)
 
-        self.soldier.set_scale(4, 4, 4)  # noqa
+        self.soldier.set_scale(4, 4, 4)
 
         self.soldier.loop('Idle')
 
         point_light = PointLight('point')
-        point_light.set_color_temperature(6500)  # noqa
+        point_light.set_color_temperature(6500)
         point_light_node = self.render.attach_new_node(point_light)
         point_light_node.set_pos(0, 0, 15)
-        self.soldier.set_light(point_light_node)  # noqa
+        self.soldier.set_light(point_light_node)
 
         # spot_light = PointLight('spot')
         # spot_lens = PerspectiveLens()
@@ -141,12 +142,12 @@ class Panda3dWalking(ShowBase):
             }
         }
 
-        self.up = KeyboardButton.up()  # noqa
-        self.down = KeyboardButton.down()  # noqa
-        self.left = KeyboardButton.left()  # noqa
-        self.right = KeyboardButton.right()  # noqa
-        self.p = KeyboardButton.ascii_key('p')  # noqa
-        self.shift = KeyboardButton.shift()  # noqa
+        self.up = KeyboardButton.up()
+        self.down = KeyboardButton.down()
+        self.left = KeyboardButton.left()
+        self.right = KeyboardButton.right()
+        self.p = KeyboardButton.ascii_key('p')
+        self.shift = KeyboardButton.shift()
 
         self.tmp_node = self.render.attach_new_node('cam-%s' % self.soldier.get_name())  # noqa
         self.turn_rate = 1.5
