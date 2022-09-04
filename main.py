@@ -1,6 +1,6 @@
 from direct.actor.Actor import Actor, DirectionalLight, Spotlight  # noqa
 from direct.actor.Actor import AmbientLight, PointLight, PerspectiveLens  # noqa
-from direct.showbase.ShowBase import ShowBase, KeyboardButton  # noqa
+from direct.showbase.ShowBase import ShowBase, KeyboardButton, CollisionBox, CollisionNode  # noqa
 from direct.interval.IntervalGlobal import LerpAnimInterval
 from direct.task import Task
 # Convert glb/gltf to .bam:
@@ -18,6 +18,7 @@ class Panda3dWalking(ShowBase):
         self.scene.reparent_to(self.render)
 
         # self.scene.ls()
+        self.set_collision_nodes()
         # print(self.scene.find('CoffeeTable'))
         new_soldier_pos = self.scene.find('CoffeeTable').get_pos()
         # print(new_soldier_pos[0])
@@ -230,6 +231,14 @@ class Panda3dWalking(ShowBase):
         self.check_keys()
         self.move_soldier()
         return Task.cont
+
+    def set_collision_nodes(self):
+        # self.scene.ls()
+        coffee_table = self.scene.find('CoffeeTable')
+        box = CollisionBox(coffee_table.get_pos()[0], 0.6, 1.4, 0.6)
+        cnode = coffee_table.attach_new_node(CollisionNode('cnode'))
+        cnode.node().add_solid(box)
+        cnode.show()
 
 
 if __name__ == '__main__':
