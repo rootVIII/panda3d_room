@@ -292,6 +292,15 @@ class Panda3dWalking(ShowBase):
         door_wall_box_node.show()
         self.pusher.add_collider(door_wall_box_node, door_wall)  # noqa
 
+        plant_wall = self.scene.find('Sphere002')
+        plant_wall_box = CollisionBox(0.0, 0.2, 2.7, 0.6)
+        plant_wall_box_node = plant_wall.attach_new_node(CollisionNode('plant_wall_cnode'))
+        plant_wall_box_node.set_pos(-4.5, -1.6, 0.0)
+        plant_wall_box_node.set_h(10)
+        plant_wall_box_node.node().add_solid(plant_wall_box)
+        plant_wall_box_node.show()
+        self.pusher.add_collider(plant_wall_box_node, plant_wall)  # noqa
+
         sofas = self.scene.find('SofaFinal')
         sofa1_box = CollisionBox(0.0, 1.0, 0.8, 0.6)
         sofa1_box_node = sofas.attach_new_node(CollisionNode('sofa1_cnode'))
@@ -299,6 +308,12 @@ class Panda3dWalking(ShowBase):
         sofa1_box_node.node().add_solid(sofa1_box)
         sofa1_box_node.show()
         self.pusher.add_collider(sofa1_box_node, sofas)  # noqa
+        sofa2_box = CollisionBox(0.0, 0.3, 1.3, 0.6)
+        sofa2_box_node = sofas.attach_new_node(CollisionNode('sofa2_cnode'))
+        sofa2_box_node.set_pos(1.8, 0.1, 0.0)
+        sofa2_box_node.node().add_solid(sofa2_box)
+        sofa2_box_node.show()
+        self.pusher.add_collider(sofa2_box_node, sofas)  # noqa
 
         """
         PandaNode Sphere002 T:m(pos -0.694494 0.465446 0.298059 hpr 79.7098 0 0 scale 0.898964)
