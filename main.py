@@ -1,7 +1,7 @@
 from direct.actor.Actor import Actor
 from direct.showbase.ShowBase import ShowBase
-from panda3d.core import KeyboardButton, AmbientLight, PointLight
-from panda3d.core import DirectionalLight  # , Spotlight, PerspectiveLens
+from panda3d.core import KeyboardButton, AmbientLight
+from panda3d.core import DirectionalLight
 from panda3d.core import CollisionNode, CollisionBox, CollisionSphere
 from panda3d.core import CollisionTraverser, CollisionHandlerPusher
 from direct.interval.IntervalGlobal import LerpAnimInterval
@@ -52,24 +52,6 @@ class Panda3dWalking(ShowBase):
         self.soldier.loop('Idle')
 
         self.set_scene_collision_nodes()
-
-        point_light = PointLight('point')
-        point_light.set_color_temperature(6500)
-        point_light_node = self.render.attach_new_node(point_light)
-        point_light_node.set_pos(0, 0, 15)
-        self.soldier.set_light(point_light_node)
-
-        # spot_light = PointLight('spot')
-        # spot_lens = PerspectiveLens()
-        # spot_light.set_lens(spot_lens)  # noqa
-        # spot_light.set_color((0.0, 0.9, 0.0, 0.1))  # noqa
-        # spot_light.set_color_temperature(6000)  # noqa
-        # spot_light.set_shadow_caster(True)  # noqa
-        # spot_light_node = self.render.attach_new_node(spot_light)
-        # spot_light_node.set_pos(-10, -10, 20)
-        # spot_light_node.look_at(self.soldier)
-        # self.render.set_light(spot_light_node)  # noqa
-        # self.render.set_shader_auto()
 
         self.soldier_heading = 0
         self.soldier.enable_blend()
