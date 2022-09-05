@@ -238,14 +238,14 @@ class Panda3dWalking(ShowBase):
         head_sphere = CollisionSphere(0, 0, 1.5, 0.2)
         head_cnode = self.soldier.attach_new_node(CollisionNode('head_cnode'))  # noqa
         head_cnode.node().add_solid(head_sphere)
-        head_cnode.show()
+        # head_cnode.show()
         self.pusher.add_collider(head_cnode, self.soldier)  # noqa
         # Put FROM objects into traverser:
         self.cTrav.add_collider(head_cnode, self.pusher)  # noqa
         body_sphere = CollisionSphere(0.0, 0.0, 0.7, 0.3)
         body_cnode = self.soldier.attach_new_node(CollisionNode('body_cnode'))  # noqa
         body_cnode.node().add_solid(body_sphere)
-        body_cnode.show()
+        # body_cnode.show()
         self.pusher.add_collider(body_cnode, self.soldier)  # noqa
         # Put FROM objects into traverser:
         self.cTrav.add_collider(body_cnode, self.pusher)  # noqa
@@ -256,7 +256,7 @@ class Panda3dWalking(ShowBase):
         coffee_table_node = coffee_table.attach_new_node(CollisionNode('coffee_table_cnode'))
         coffee_table_node.set_pos(0.0, 0.1, 0.4)
         coffee_table_node.node().add_solid(coffee_tale_box)
-        coffee_table_node.show()
+        # coffee_table_node.show()
         self.pusher.add_collider(coffee_table_node, coffee_table)  # noqa
 
         seat = self.scene.find('Seat')
@@ -265,7 +265,7 @@ class Panda3dWalking(ShowBase):
         seat_node.set_pos(-1.8, -8.0, 0.0)
         seat_node.set_h(40)
         seat_node.node().add_solid(seat_box)
-        seat_node.show()
+        # seat_node.show()
         self.pusher.add_collider(seat_node, seat)  # noqa
 
         curtain_wall = self.scene.find('Curtain001')
@@ -273,7 +273,7 @@ class Panda3dWalking(ShowBase):
         curtain_wall_box_node = curtain_wall.attach_new_node(CollisionNode('curtain_wall_cnode'))
         curtain_wall_box_node.set_pos(0.7, -2.2, 0.0)
         curtain_wall_box_node.node().add_solid(curtain_wall_box)
-        curtain_wall_box_node.show()
+        # curtain_wall_box_node.show()
         self.pusher.add_collider(curtain_wall_box_node, curtain_wall)  # noqa
 
         side_quest_wall = self.scene.find('fwaf')
@@ -281,7 +281,7 @@ class Panda3dWalking(ShowBase):
         side_quest_wall_box_node = side_quest_wall.attach_new_node(CollisionNode('side_quest_wall_cnode'))
         side_quest_wall_box_node.set_pos(-2.2, 1.3, 0.0)
         side_quest_wall_box_node.node().add_solid(side_quest_wall_box)
-        side_quest_wall_box_node.show()
+        # side_quest_wall_box_node.show()
         self.pusher.add_collider(side_quest_wall_box_node, side_quest_wall)  # noqa
 
         door_wall = self.scene.find('Door')
@@ -289,7 +289,7 @@ class Panda3dWalking(ShowBase):
         door_wall_box_node = door_wall.attach_new_node(CollisionNode('door_wall_cnode'))
         door_wall_box_node.set_pos(1.8, -0.4, 0.0)
         door_wall_box_node.node().add_solid(door_wall_box)
-        door_wall_box_node.show()
+        # door_wall_box_node.show()
         self.pusher.add_collider(door_wall_box_node, door_wall)  # noqa
 
         plant_wall = self.scene.find('Sphere002')
@@ -298,7 +298,7 @@ class Panda3dWalking(ShowBase):
         plant_wall_box_node.set_pos(-4.5, -1.6, 0.0)
         plant_wall_box_node.set_h(10)
         plant_wall_box_node.node().add_solid(plant_wall_box)
-        plant_wall_box_node.show()
+        # plant_wall_box_node.show()
         self.pusher.add_collider(plant_wall_box_node, plant_wall)  # noqa
 
         sofas = self.scene.find('SofaFinal')
@@ -306,52 +306,14 @@ class Panda3dWalking(ShowBase):
         sofa1_box_node = sofas.attach_new_node(CollisionNode('sofa1_cnode'))
         sofa1_box_node.set_pos(0.0, 2.5, 0.0)
         sofa1_box_node.node().add_solid(sofa1_box)
-        sofa1_box_node.show()
+        # sofa1_box_node.show()
         self.pusher.add_collider(sofa1_box_node, sofas)  # noqa
         sofa2_box = CollisionBox(0.0, 0.3, 1.3, 0.6)
         sofa2_box_node = sofas.attach_new_node(CollisionNode('sofa2_cnode'))
         sofa2_box_node.set_pos(1.8, 0.1, 0.0)
         sofa2_box_node.node().add_solid(sofa2_box)
-        sofa2_box_node.show()
+        # sofa2_box_node.show()
         self.pusher.add_collider(sofa2_box_node, sofas)  # noqa
-
-        """
-        PandaNode Sphere002 T:m(pos -0.694494 0.465446 0.298059 hpr 79.7098 0 0 scale 0.898964)
-        PandaNode CoffeeTable T:m(pos -0.0541124 2.10138 -0.102804 hpr 180 0 0 scale 0.766159 0.672106 1)
-        PandaNode Plane001 T:m(pos 0.232862 0.661916 -0.120272 hpr 180 0 0)
-        PandaNode Door T:m(pos -2.72154 -2.15377 -0.120272 hpr 90 0 0 scale 1.18064 1 1)
-        PandaNode RecordPlayer T:m(pos 2.19253 2.09771 0.598156 hpr 180 0 0 scale 0.513492 0.696524 1.42864)
-        PandaNode Box043 T:m(pos 2.53411 1.31676 0.842399 hpr 180 0 50.6667 scale 1.74696)
-        PandaNode Seat T:m(pos 0.396586 -4.00901 0.326915 hpr 180 0 0)
-        PandaNode Roof T:m(pos 0.232862 0.661916 3.32537 hpr 180 0 180)
-        PandaNode Box077 T:m(pos -2.6911 1.02895 1.8482 hpr 180 0 0 scale 0.770214 0.770214 0.829118)
-        PandaNode Lights T:m(pos -1.33388 2.7471 3.32118 hpr 180 0 0)
-        PandaNode Box094 T:m(pos -0.0970315 1.99833 -0.1306 hpr 180 0 0 scale 0.932252 1 1)
-        PandaNode Storage T:m(pos -2.35017 -0.387263 0.231372 hpr 180 0 0 scale 0.839194 1.12143 0.474423)
-        PandaNode Books T:m(pos 2.61092 -1.1386 0.461835 hpr -175 0 0 scale 0.911785)
-        PandaNode Box091 T:m(pos 0.116134 4.92379 2.69559 hpr -6.83019e-06 90 -1.82123e-06 scale 0.936823 1 -0.732712)
-          PandaNode ReverseCulling S:(CullFaceAttrib)
-        PandaNode Box121 T:m(pos -1.00511 -4.34932 1.79195 hpr 180 0 0 scale 1.12577 0.940561 1.12577)
-        PandaNode Plane003 T:m(pos 2.90311 2.49744 1.64551 hpr 0 90 -90 scale 4.33458)
-        PandaNode Walls T:m(pos 0.232861 0.661916 -0.120272 hpr 180 0 0)
-        PandaNode Curtain001 T:m(pos -0.0454077 2.12796 -0.064358 hpr 180 0 2.34103e-06 scale 1.00062 1.00141 0.991328)
-        PandaNode SofaFinal T:m(pos -0.0470138 2.09851 -0.0630138 hpr 180 0 0 scale 1.02902 1.05268 1.20711)
-        PandaNode Rail T:m(pos -0.0541124 2.00523 -0.21298 hpr 180 0 0 scale 0.75 0.77715 0.77715)
-        PandaNode fwaf T:m(pos 0.232862 0.661916 -0.120272 hpr 180 0 0)
-          PandaNode FinalShelvesef T:m(scale 1 1 1.61898)
-        PandaNode Group002 T:m(pos 0.232862 0.661916 -0.120272 hpr 180 0 0)
-          PandaNode fireGlas T:m(scale 0.961389 1.00968 1.00968)
-          PandaNode Chimney T:m(hpr 90 0 0 scale 0.761784)
-          PandaNode Fireplace T:m(scale 0.952176 1 1)
-        PandaNode Decorations T:m(pos -0.0541126 2.10138 -0.102804 hpr 180 5.21849e-06 0 scale 0.683426 0.684426 0.684426)
-        PandaNode GLOBEY T:m(pos 0.396587 -4.00901 0.326915 hpr 180 0 0)
-          PandaNode GlobeSphere T:m(hpr -162.943 89.9999 -177.057 scale 0.944469)
-          PandaNode GlobeBase T:m(pos -2.14441 0.0635236 0.407292 hpr 20 0 0 scale 1.52784)
-          PandaNode plantz T:m(hpr -164.703 -8.1029 -17.471 scale 0.493729)
-        PandaNode Group001 T:m(pos 0.232862 0.661916 -0.120272 hpr 180 0 0 scale 1 1 1.61898)
-          PandaNode Box124 T:m(scale 1.04556 1.04556 0.645816)
-        PandaNode Particle View 001 T:m(pos 0.116133 0.408226 -0.120272 hpr 180 0 0)
-        """
 
 
 if __name__ == '__main__':
