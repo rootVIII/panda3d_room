@@ -2,7 +2,7 @@ from direct.actor.Actor import Actor
 from direct.showbase.ShowBase import ShowBase
 from panda3d.core import KeyboardButton, AmbientLight, PointLight
 from panda3d.core import DirectionalLight  # , Spotlight, PerspectiveLens
-from panda3d.core import CollisionNode, CollisionBox, CollisionCapsule
+from panda3d.core import CollisionNode, CollisionBox, CollisionSphere
 from panda3d.core import CollisionTraverser, CollisionHandlerPusher
 from direct.interval.IntervalGlobal import LerpAnimInterval
 from direct.task import Task
@@ -218,7 +218,7 @@ class Panda3dWalking(ShowBase):
         elif action == 'WalkBack':
             self.soldier.set_y(self.soldier, -0.01)
         elif action == 'Run':
-            self.soldier.set_y(self.soldier, 0.2)
+            self.soldier.set_y(self.soldier, 0.1)
 
         self.soldier.set_h(self.soldier_heading)  # noqa
         self.tmp_node.set_pos(self.soldier.get_pos())  # noqa
@@ -234,34 +234,71 @@ class Panda3dWalking(ShowBase):
         return Task.cont
 
     def set_scene_collision_nodes(self):
-        self.scene.ls()
-        capsule = CollisionCapsule(0, 0, 0.4, 0, 0, 1.3, 0.45)
-        soldier_cnode = self.soldier.attach_new_node(CollisionNode('soldier_cnode'))  # noqa
-        soldier_cnode.node().add_solid(capsule)
-        soldier_cnode.show()
-        self.pusher.add_collider(soldier_cnode, self.soldier)  # noqa
-        self.cTrav.add_collider(soldier_cnode, self.pusher)  # noqa
+        # self.scene.ls()
+        head_sphere = CollisionSphere(0, 0, 1.5, 0.2)
+        head_cnode = self.soldier.attach_new_node(CollisionNode('head_cnode'))  # noqa
+        head_cnode.node().add_solid(head_sphere)
+        head_cnode.show()
+        self.pusher.add_collider(head_cnode, self.soldier)  # noqa
+        # Put FROM objects into traverser:
+        self.cTrav.add_collider(head_cnode, self.pusher)  # noqa
+        body_sphere = CollisionSphere(0.0, 0.0, 0.7, 0.3)
+        body_cnode = self.soldier.attach_new_node(CollisionNode('body_cnode'))  # noqa
+        body_cnode.node().add_solid(body_sphere)
+        body_cnode.show()
+        self.pusher.add_collider(body_cnode, self.soldier)  # noqa
+        # Put FROM objects into traverser:
+        self.cTrav.add_collider(body_cnode, self.pusher)  # noqa
 
+        # static TO objects don't need to be put in the Traverser:
         coffee_table = self.scene.find('CoffeeTable')
-        coffee_table_x, coffee_table_y, coffee_table_z = coffee_table.get_pos()
-        coffee_tale_box = CollisionBox(coffee_table_x, 0.6, 1.4, 0.2)
+        coffee_tale_box = CollisionBox(0.0, 0.8, 1.6, 0.2)
         coffee_table_node = coffee_table.attach_new_node(CollisionNode('coffee_table_cnode'))
-        coffee_table_node.set_pos(0, 0, 0.4)
+        coffee_table_node.set_pos(0.0, 0.1, 0.4)
         coffee_table_node.node().add_solid(coffee_tale_box)
         coffee_table_node.show()
         self.pusher.add_collider(coffee_table_node, coffee_table)  # noqa
-        self.cTrav.add_collider(coffee_table_node, self.pusher)  # noqa
 
         seat = self.scene.find('Seat')
-        seat_x, _, _, = seat.get_pos()
-        seat_box = CollisionBox(0.0, 0.6, 0.6, 0.3)
+        seat_box = CollisionBox(0.0, 0.7, 0.6, 0.3)
         seat_node = seat.attach_new_node(CollisionNode('seat_cnode'))
         seat_node.set_pos(-1.8, -8.0, 0.0)
         seat_node.set_h(40)
         seat_node.node().add_solid(seat_box)
         seat_node.show()
         self.pusher.add_collider(seat_node, seat)  # noqa
-        self.cTrav.add_collider(seat_node, self.pusher)  # noqa
+
+        curtain_wall = self.scene.find('Curtain001')
+        curtain_wall_box = CollisionBox(0.0, 2.2, 0.2, 0.6)
+        curtain_wall_box_node = curtain_wall.attach_new_node(CollisionNode('curtain_wall_cnode'))
+        curtain_wall_box_node.set_pos(0.7, -2.2, 0.0)
+        curtain_wall_box_node.node().add_solid(curtain_wall_box)
+        curtain_wall_box_node.show()
+        self.pusher.add_collider(curtain_wall_box_node, curtain_wall)  # noqa
+
+        side_quest_wall = self.scene.find('fwaf')
+        side_quest_wall_box = CollisionBox(0.0, 0.2, 4.0, 0.6)
+        side_quest_wall_box_node = side_quest_wall.attach_new_node(CollisionNode('side_quest_wall_cnode'))
+        side_quest_wall_box_node.set_pos(-2.2, 1.3, 0.0)
+        side_quest_wall_box_node.node().add_solid(side_quest_wall_box)
+        side_quest_wall_box_node.show()
+        self.pusher.add_collider(side_quest_wall_box_node, side_quest_wall)  # noqa
+
+        door_wall = self.scene.find('Door')
+        door_wall_box = CollisionBox(0.0, 3.8, 0.2, 0.6)
+        door_wall_box_node = door_wall.attach_new_node(CollisionNode('door_wall_cnode'))
+        door_wall_box_node.set_pos(1.8, -0.4, 0.0)
+        door_wall_box_node.node().add_solid(door_wall_box)
+        door_wall_box_node.show()
+        self.pusher.add_collider(door_wall_box_node, door_wall)  # noqa
+
+        sofas = self.scene.find('SofaFinal')
+        sofa1_box = CollisionBox(0.0, 1.0, 0.8, 0.6)
+        sofa1_box_node = sofas.attach_new_node(CollisionNode('sofa1_cnode'))
+        sofa1_box_node.set_pos(0.0, 2.5, 0.0)
+        sofa1_box_node.node().add_solid(sofa1_box)
+        sofa1_box_node.show()
+        self.pusher.add_collider(sofa1_box_node, sofas)  # noqa
 
         """
         PandaNode Sphere002 T:m(pos -0.694494 0.465446 0.298059 hpr 79.7098 0 0 scale 0.898964)
