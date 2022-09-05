@@ -234,7 +234,7 @@ class Panda3dWalking(ShowBase):
         return Task.cont
 
     def set_scene_collision_nodes(self):
-        # self.scene.ls()
+        self.scene.ls()
         capsule = CollisionCapsule(0, 0, 0.4, 0, 0, 1.3, 0.45)
         soldier_cnode = self.soldier.attach_new_node(CollisionNode('soldier_cnode'))  # noqa
         soldier_cnode.node().add_solid(capsule)
@@ -243,12 +243,63 @@ class Panda3dWalking(ShowBase):
         self.cTrav.add_collider(soldier_cnode, self.pusher)  # noqa
 
         coffee_table = self.scene.find('CoffeeTable')
-        box = CollisionBox(coffee_table.get_pos()[0], 0.6, 1.4, 0.6)
+        coffee_table_x, coffee_table_y, coffee_table_z = coffee_table.get_pos()
+        coffee_tale_box = CollisionBox(coffee_table_x, 0.6, 1.4, 0.2)
         coffee_table_node = coffee_table.attach_new_node(CollisionNode('coffee_table_cnode'))
-        coffee_table_node.node().add_solid(box)
+        coffee_table_node.set_pos(0, 0, 0.4)
+        coffee_table_node.node().add_solid(coffee_tale_box)
         coffee_table_node.show()
         self.pusher.add_collider(coffee_table_node, coffee_table)  # noqa
         self.cTrav.add_collider(coffee_table_node, self.pusher)  # noqa
+
+        item = self.scene.find('Seat')
+        item_x, _, _, = item.get_pos()
+        item_box = CollisionBox(0.0, 0.6, 0.6, 0.3)
+        item_node = item.attach_new_node(CollisionNode('item_cnode'))
+        item_node.set_pos(-1.8, -8.0, 0.0)
+        item_node.set_h(40)
+        item_node.node().add_solid(item_box)
+        item_node.show()
+        self.pusher.add_collider(item_node, item)  # noqa
+        self.cTrav.add_collider(item_node, self.pusher)  # noqa
+
+        """
+        PandaNode Sphere002 T:m(pos -0.694494 0.465446 0.298059 hpr 79.7098 0 0 scale 0.898964)
+        PandaNode CoffeeTable T:m(pos -0.0541124 2.10138 -0.102804 hpr 180 0 0 scale 0.766159 0.672106 1)
+        PandaNode Plane001 T:m(pos 0.232862 0.661916 -0.120272 hpr 180 0 0)
+        PandaNode Door T:m(pos -2.72154 -2.15377 -0.120272 hpr 90 0 0 scale 1.18064 1 1)
+        PandaNode RecordPlayer T:m(pos 2.19253 2.09771 0.598156 hpr 180 0 0 scale 0.513492 0.696524 1.42864)
+        PandaNode Box043 T:m(pos 2.53411 1.31676 0.842399 hpr 180 0 50.6667 scale 1.74696)
+        PandaNode Seat T:m(pos 0.396586 -4.00901 0.326915 hpr 180 0 0)
+        PandaNode Roof T:m(pos 0.232862 0.661916 3.32537 hpr 180 0 180)
+        PandaNode Box077 T:m(pos -2.6911 1.02895 1.8482 hpr 180 0 0 scale 0.770214 0.770214 0.829118)
+        PandaNode Lights T:m(pos -1.33388 2.7471 3.32118 hpr 180 0 0)
+        PandaNode Box094 T:m(pos -0.0970315 1.99833 -0.1306 hpr 180 0 0 scale 0.932252 1 1)
+        PandaNode Storage T:m(pos -2.35017 -0.387263 0.231372 hpr 180 0 0 scale 0.839194 1.12143 0.474423)
+        PandaNode Books T:m(pos 2.61092 -1.1386 0.461835 hpr -175 0 0 scale 0.911785)
+        PandaNode Box091 T:m(pos 0.116134 4.92379 2.69559 hpr -6.83019e-06 90 -1.82123e-06 scale 0.936823 1 -0.732712)
+          PandaNode ReverseCulling S:(CullFaceAttrib)
+        PandaNode Box121 T:m(pos -1.00511 -4.34932 1.79195 hpr 180 0 0 scale 1.12577 0.940561 1.12577)
+        PandaNode Plane003 T:m(pos 2.90311 2.49744 1.64551 hpr 0 90 -90 scale 4.33458)
+        PandaNode Walls T:m(pos 0.232861 0.661916 -0.120272 hpr 180 0 0)
+        PandaNode Curtain001 T:m(pos -0.0454077 2.12796 -0.064358 hpr 180 0 2.34103e-06 scale 1.00062 1.00141 0.991328)
+        PandaNode SofaFinal T:m(pos -0.0470138 2.09851 -0.0630138 hpr 180 0 0 scale 1.02902 1.05268 1.20711)
+        PandaNode Rail T:m(pos -0.0541124 2.00523 -0.21298 hpr 180 0 0 scale 0.75 0.77715 0.77715)
+        PandaNode fwaf T:m(pos 0.232862 0.661916 -0.120272 hpr 180 0 0)
+          PandaNode FinalShelvesef T:m(scale 1 1 1.61898)
+        PandaNode Group002 T:m(pos 0.232862 0.661916 -0.120272 hpr 180 0 0)
+          PandaNode fireGlas T:m(scale 0.961389 1.00968 1.00968)
+          PandaNode Chimney T:m(hpr 90 0 0 scale 0.761784)
+          PandaNode Fireplace T:m(scale 0.952176 1 1)
+        PandaNode Decorations T:m(pos -0.0541126 2.10138 -0.102804 hpr 180 5.21849e-06 0 scale 0.683426 0.684426 0.684426)
+        PandaNode GLOBEY T:m(pos 0.396587 -4.00901 0.326915 hpr 180 0 0)
+          PandaNode GlobeSphere T:m(hpr -162.943 89.9999 -177.057 scale 0.944469)
+          PandaNode GlobeBase T:m(pos -2.14441 0.0635236 0.407292 hpr 20 0 0 scale 1.52784)
+          PandaNode plantz T:m(hpr -164.703 -8.1029 -17.471 scale 0.493729)
+        PandaNode Group001 T:m(pos 0.232862 0.661916 -0.120272 hpr 180 0 0 scale 1 1 1.61898)
+          PandaNode Box124 T:m(scale 1.04556 1.04556 0.645816)
+        PandaNode Particle View 001 T:m(pos 0.116133 0.408226 -0.120272 hpr 180 0 0)
+        """
 
 
 if __name__ == '__main__':
