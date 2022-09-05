@@ -252,16 +252,16 @@ class Panda3dWalking(ShowBase):
         self.pusher.add_collider(coffee_table_node, coffee_table)  # noqa
         self.cTrav.add_collider(coffee_table_node, self.pusher)  # noqa
 
-        item = self.scene.find('Seat')
-        item_x, _, _, = item.get_pos()
-        item_box = CollisionBox(0.0, 0.6, 0.6, 0.3)
-        item_node = item.attach_new_node(CollisionNode('item_cnode'))
-        item_node.set_pos(-1.8, -8.0, 0.0)
-        item_node.set_h(40)
-        item_node.node().add_solid(item_box)
-        item_node.show()
-        self.pusher.add_collider(item_node, item)  # noqa
-        self.cTrav.add_collider(item_node, self.pusher)  # noqa
+        seat = self.scene.find('Seat')
+        seat_x, _, _, = seat.get_pos()
+        seat_box = CollisionBox(0.0, 0.6, 0.6, 0.3)
+        seat_node = seat.attach_new_node(CollisionNode('seat_cnode'))
+        seat_node.set_pos(-1.8, -8.0, 0.0)
+        seat_node.set_h(40)
+        seat_node.node().add_solid(seat_box)
+        seat_node.show()
+        self.pusher.add_collider(seat_node, seat)  # noqa
+        self.cTrav.add_collider(seat_node, self.pusher)  # noqa
 
         """
         PandaNode Sphere002 T:m(pos -0.694494 0.465446 0.298059 hpr 79.7098 0 0 scale 0.898964)
