@@ -8,6 +8,8 @@ from direct.interval.IntervalGlobal import LerpAnimInterval  # noqa
 from direct.task import Task  # noqa
 # Convert glb/gltf to bam by activating venv and running:
 # gltf2bam assets/soldierx.glb assets/soldierx.bam
+# Development: python main.py
+# Build exe: python setup.py build_apps
 
 
 class Panda3dWalking(ShowBase):
