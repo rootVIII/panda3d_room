@@ -6,10 +6,15 @@ from panda3d.core import CollisionNode, CollisionBox, CollisionSphere
 from panda3d.core import CollisionTraverser, CollisionHandlerPusher
 from direct.interval.IntervalGlobal import LerpAnimInterval  # noqa
 from direct.task import Task  # noqa
+#
 # Convert glb/gltf to bam by activating venv and running:
 # gltf2bam assets/soldierx.glb assets/soldierx.bam
-# Development: python main.py
-# Build exe: python setup.py build_apps
+#
+# Development:
+# python main.py
+#
+# Build binaries for distribution:
+# python setup.py build_apps
 
 
 class Panda3dWalking(ShowBase):
