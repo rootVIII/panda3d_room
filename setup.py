@@ -5,9 +5,9 @@ setup(
     options={
         'build_apps': {
             'gui_apps': {
-                'panda3d_test': 'main.py',
+                'panda3d_room': 'main.py',
             },
-            'log_filename': 'panda3d_test.log',
+            'log_filename': 'panda3d_room.log',
             'log_append': False,
             'include_patterns': [
                 '**/*.png',
