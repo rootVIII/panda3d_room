@@ -17,7 +17,7 @@ from direct.task import Task  # noqa
 # python setup.py build_apps
 
 
-class Panda3dWalking(ShowBase):
+class Panda3dRoom(ShowBase):
 
     # noinspection PyArgumentList
     def __init__(self):
@@ -306,5 +306,5 @@ class Panda3dWalking(ShowBase):
 
 
 if __name__ == '__main__':
-    app = Panda3dWalking()
+    app = Panda3dRoom()
     app.run()
