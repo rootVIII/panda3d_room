@@ -1,13 +1,12 @@
-from direct.actor.Actor import Actor
-from direct.showbase.ShowBase import ShowBase
+from direct.actor.Actor import Actor  # noqa
+from direct.showbase.ShowBase import ShowBase  # noqa
 from panda3d.core import KeyboardButton, AmbientLight
 from panda3d.core import DirectionalLight
 from panda3d.core import CollisionNode, CollisionBox, CollisionSphere
 from panda3d.core import CollisionTraverser, CollisionHandlerPusher
-from direct.interval.IntervalGlobal import LerpAnimInterval
-from direct.task import Task
-# Convert glb/gltf to .bam:
-# source venv/bin/activate
+from direct.interval.IntervalGlobal import LerpAnimInterval  # noqa
+from direct.task import Task  # noqa
+# Convert glb/gltf to bam by activating venv and running:
 # gltf2bam assets/soldierx.glb assets/soldierx.bam
 
 
@@ -19,6 +18,7 @@ class Panda3dWalking(ShowBase):
 
         self.scene = self.loader.load_model('assets/Home2_Night.bam')
         self.scene.reparent_to(self.render)
+        self.set_background_color(0, 0, 0, 1.0)
 
         self.cTrav = CollisionTraverser()
         self.pusher = CollisionHandlerPusher()
