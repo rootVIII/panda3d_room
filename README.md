@@ -25,6 +25,6 @@ to bam by activating the venv and running:
 
 <pre><code>gltf2bam assets/ninja.glb assets/ninja.bam</code></pre>
 
-
+<br><br><br>
 <img src="https://user-images.githubusercontent.com/30498791/190553885-d95448a6-01eb-46c6-b81a-83b50cb4a2fa.png" alt="ex">
 
