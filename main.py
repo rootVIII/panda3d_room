@@ -4,7 +4,7 @@ from direct.interval.IntervalGlobal import LerpAnimInterval  # noqa
 from direct.task import Task  # noqa
 from direct.filter.CommonFilters import CommonFilters  # noqa
 from panda3d.core import KeyboardButton, AmbientLight
-from panda3d.core import DirectionalLight
+from panda3d.core import DirectionalLight, WindowProperties
 from panda3d.core import CollisionNode, CollisionBox, CollisionCapsule
 from panda3d.core import CollisionTraverser, CollisionHandlerPusher
 
@@ -14,6 +14,9 @@ class Panda3dRoom(ShowBase):
     # noinspection PyArgumentList
     def __init__(self):
         ShowBase.__init__(self)
+        props = WindowProperties()
+        props.setTitle('panda3d room')
+        self.win.requestProperties(props)
 
         self.scene = self.loader.load_model('assets/Home2_Night.bam')
         self.scene.reparent_to(self.render)
