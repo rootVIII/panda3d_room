@@ -9,34 +9,6 @@ from panda3d.core import CollisionNode, CollisionBox, CollisionCapsule
 from panda3d.core import CollisionTraverser, CollisionHandlerPusher
 
 
-"""
-- Installing source:
-Navigate to the panda3d_room/ directory and then create
-and activate a virtualenv. Install the requirements.
-
-python -m venv ./venv
-source venv/Scripts/activate
-pip install -r requirements.txt
-
-- Run development:
-
-python main.py
-
-- Build binaries for distribution (note OS on setup.py):
-
-python setup.py build_apps
-
-- A build/ folder will get created after running the
-above command. Double-click the build/panda3d_room.exe
-to open the app.
-
-- The glb/gltf files in assets/ were converted
-to bam by activating the venv and running:
-
-gltf2bam assets/ninja.glb assets/ninja.bam
-"""
-
-
 class Panda3dRoom(ShowBase):
 
     # noinspection PyArgumentList
