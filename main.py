@@ -1,20 +1,40 @@
 from direct.actor.Actor import Actor  # noqa
 from direct.showbase.ShowBase import ShowBase  # noqa
-from panda3d.core import KeyboardButton, AmbientLight
-from panda3d.core import DirectionalLight
-from panda3d.core import CollisionNode, CollisionBox, CollisionSphere
-from panda3d.core import CollisionTraverser, CollisionHandlerPusher
 from direct.interval.IntervalGlobal import LerpAnimInterval  # noqa
 from direct.task import Task  # noqa
-#
-# Convert glb/gltf to bam by activating venv and running:
-# gltf2bam assets/soldierx.glb assets/soldierx.bam
-#
-# Development:
-# python main.py
-#
-# Build binaries for distribution:
-# python setup.py build_apps
+from direct.filter.CommonFilters import CommonFilters  # noqa
+from panda3d.core import KeyboardButton, AmbientLight
+from panda3d.core import DirectionalLight
+from panda3d.core import CollisionNode, CollisionBox, CollisionCapsule
+from panda3d.core import CollisionTraverser, CollisionHandlerPusher
+
+
+"""
+- Installing source:
+Navigate to the panda3d_room/ directory and then create
+and activate a virtualenv. Install the requirements.
+
+python -m venv ./venv
+source venv/Scripts/activate
+pip install -r requirements.txt
+
+- Run development:
+
+python main.py
+
+- Build binaries for distribution (note OS on setup.py):
+
+python setup.py build_apps
+
+- A build/ folder will get created after running the
+above command. Double-click the build/panda3d_room.exe
+to open the app.
+
+- The glb/gltf files in assets/ were converted
+to bam by activating the venv and running:
+
+gltf2bam assets/ninja.glb assets/ninja.bam
+"""
 
 
 class Panda3dRoom(ShowBase):
@@ -27,6 +47,9 @@ class Panda3dRoom(ShowBase):
         self.scene.reparent_to(self.render)
         self.set_background_color(0, 0, 0, 1.0)
 
+        filters = CommonFilters(self.win, self.cam)
+        filters.setBlurSharpen(0.8)
+
         self.cTrav = CollisionTraverser()
         self.pusher = CollisionHandlerPusher()
 
@@ -36,7 +59,7 @@ class Panda3dRoom(ShowBase):
         self.render.set_light(ambient_light_node)
 
         dir_light = DirectionalLight('directional')
-        dir_light.set_color_temperature(5000)  # noqa
+        dir_light.set_color_temperature(4500)  # noqa
         dir_light_node = self.render.attachNewNode(dir_light)
         dir_light_node.set_hpr(60, 0, 90)
         self.render.set_light(dir_light_node)
@@ -47,21 +70,20 @@ class Panda3dRoom(ShowBase):
         self.scene.set_scale(4, 4, 4)
         self.scene.set_pos(0, 0, 0)
 
-        self.soldier = Actor('assets/soldierx.bam')
-        self.soldier.reparent_to(self.render)
+        self.ninja = Actor('assets/ninja.bam')
+        self.ninja.reparent_to(self.render)
 
-        new_soldier_pos = self.scene.find('CoffeeTable').get_pos()
-        new_soldier_pos[0] += 5
-        self.soldier.set_pos(new_soldier_pos)
+        new_ninja_pos = self.scene.find('CoffeeTable').get_pos()
+        new_ninja_pos[0] += 5.0
+        new_ninja_pos[2] -= 0.4
+        self.ninja.set_pos(new_ninja_pos)
 
-        self.soldier.set_scale(4, 4, 4)
-
-        self.soldier.loop('Idle')
+        self.ninja.loop('Idle')
 
         self.set_scene_collision_nodes()
 
-        self.soldier_heading = 0
-        self.soldier.enable_blend()
+        self.ninja_heading = 0
+        self.ninja.enable_blend()
 
         self.camera.set_pos(0, -20, 9.7)
         self.camera.set_p(-15)
@@ -72,64 +94,64 @@ class Panda3dRoom(ShowBase):
         self.current_action = 'Walk_Idle'
         self.animations = {
             'Idle_Walk': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Idle', 'Walk')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'Walk')
             },
             'Walk_Idle': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Walk', 'Idle')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'Idle')
             },
             'Idle_WalkBack': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Idle', 'WalkBack')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'WalkBack')
             },
             'WalkBack_Idle': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Idle')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'Idle')
             },
             'Idle_Run': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Idle', 'Run')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'Run')
             },
             'Run_Idle': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Run', 'Idle')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'Idle')
             },
             'Run_Walk': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Run', 'Walk')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'Walk')
             },
             'Walk_Run': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Walk', 'Run')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'Run')
             },
             'Idle_Punch': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Idle', 'Punch')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'Punch')
             },
             'Punch_Idle': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Punch', 'Idle')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'Idle')
             },
             'Run_Punch': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Run', 'Punch')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'Punch')
             },
             'Punch_Run': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Punch', 'Run')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'Run')
             },
             'Walk_Punch': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Walk', 'Punch')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'Punch')
             },
             'Punch_Walk': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Punch', 'Walk')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'Walk')
             },
             'WalkBack_Punch': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Punch')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'Punch')
             },
             'Punch_WalkBack': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Punch', 'WalkBack')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'WalkBack')
             },
             'WalkBack_Run': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Run')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'Run')
             },
             'Run_WalkBack': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Run', 'WalkBack')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'WalkBack')
             },
             'WalkBack_Walk': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'WalkBack', 'Walk')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'Walk')
             },
             'Walk_WalkBack': {
-                'lerp': LerpAnimInterval(self.soldier, 0.25, 'Walk', 'WalkBack')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'WalkBack')
             }
         }
 
@@ -140,14 +162,14 @@ class Panda3dRoom(ShowBase):
         self.p = KeyboardButton.ascii_key('p')
         self.shift = KeyboardButton.shift()
 
-        self.tmp_node = self.render.attach_new_node('cam-%s' % self.soldier.get_name())  # noqa
+        self.tmp_node = self.render.attach_new_node('cam-%s' % self.ninja.get_name())  # noqa
         self.turn_rate = 1.5
 
     def finish_running_lerps(self):
         _ = [lerp['lerp'].finish() for _, lerp in self.animations.items()  # noqa
              if lerp['lerp'].is_playing()]  # noqa
 
-    def animate_soldier(self, new_action):
+    def animate_model(self, new_action):
         _, old_action = self.current_action.split('_')
         if old_action != new_action:
             self.finish_running_lerps()
@@ -155,32 +177,32 @@ class Panda3dRoom(ShowBase):
             self.animations[self.current_action]['lerp'].start()  # noqa
 
             if new_action != 'Punch':
-                self.soldier.loop(new_action)
+                self.ninja.loop(new_action)
             else:
-                self.soldier.play(new_action)
+                self.ninja.play(new_action)
 
     def walk_forward(self):
-        self.animate_soldier('Walk')
+        self.animate_model('Walk')
 
     def run_forward(self):
-        self.animate_soldier('Run')
+        self.animate_model('Run')
 
     def walk_backward(self):
-        self.animate_soldier('WalkBack')
+        self.animate_model('WalkBack')
 
     def stop(self):
-        self.animate_soldier('Idle')
+        self.animate_model('Idle')
 
     def punch(self):
-        self.animate_soldier('Punch')
+        self.animate_model('Punch')
 
     def turn_left(self):
-        self.soldier_heading += 3
-        self.soldier.set_h(self.soldier_heading)  # noqa
+        self.ninja_heading += 3
+        self.ninja.set_h(self.ninja_heading)  # noqa
 
     def turn_right(self):
-        self.soldier_heading -= 3
-        self.soldier.set_h(self.soldier_heading)  # noqa
+        self.ninja_heading -= 3
+        self.ninja.set_h(self.ninja_heading)  # noqa
 
     def check_keys(self):
         if self.is_down(self.left):
@@ -200,48 +222,41 @@ class Panda3dRoom(ShowBase):
         else:
             self.stop()
 
-    def move_soldier(self):
+    def move_ninja(self):
         _, action = self.current_action.split('_')
         if action == 'Walk':
-            self.soldier.set_y(self.soldier, 0.05)
+            self.ninja.set_y(self.ninja, 0.1)
         elif action == 'WalkBack':
-            self.soldier.set_y(self.soldier, -0.01)
+            self.ninja.set_y(self.ninja, -0.05)
         elif action == 'Run':
-            self.soldier.set_y(self.soldier, 0.1)
+            self.ninja.set_y(self.ninja, 0.3)
 
-        self.soldier.set_h(self.soldier_heading)  # noqa
-        self.tmp_node.set_pos(self.soldier.get_pos())  # noqa
+        self.ninja.set_h(self.ninja_heading)  # noqa
+        self.tmp_node.set_pos(self.ninja.get_pos())  # noqa
         heading = self.tmp_node.get_h()
-        turn_diff = self.soldier.get_h() - heading  # noqa
+        turn_diff = self.ninja.get_h() - heading  # noqa
         self.tmp_node.set_h(heading + turn_diff * self.turn_rate)
         self.camera.reparent_to(self.tmp_node)
 
     def update(self, task):
         _ = task
         self.check_keys()
-        self.move_soldier()
+        self.move_ninja()
         return Task.cont
 
     def set_scene_collision_nodes(self):
         # self.scene.ls()
-        head_sphere = CollisionSphere(0, 0, 1.5, 0.2)
-        head_cnode = self.soldier.attach_new_node(CollisionNode('head_cnode'))  # noqa
-        head_cnode.node().add_solid(head_sphere)
-        # head_cnode.show()
-        self.pusher.add_collider(head_cnode, self.soldier)  # noqa
-        # Put FROM objects into traverser:
-        self.cTrav.add_collider(head_cnode, self.pusher)  # noqa
-        body_sphere = CollisionSphere(0.0, 0.0, 0.7, 0.3)
-        body_cnode = self.soldier.attach_new_node(CollisionNode('body_cnode'))  # noqa
-        body_cnode.node().add_solid(body_sphere)
+        body_capsule = CollisionCapsule(0, 0, 1.2, 0, 0, 4.0, 1.5)
+        body_cnode = self.ninja.attach_new_node(CollisionNode('body_cnode'))  # noqa
+        body_cnode.node().add_solid(body_capsule)
         # body_cnode.show()
-        self.pusher.add_collider(body_cnode, self.soldier)  # noqa
+        self.pusher.add_collider(body_cnode, self.ninja)  # noqa
         # Put FROM objects into traverser:
         self.cTrav.add_collider(body_cnode, self.pusher)  # noqa
 
         # static TO objects don't need to be put in the Traverser:
         coffee_table = self.scene.find('CoffeeTable')
-        coffee_tale_box = CollisionBox(0.0, 0.8, 1.6, 0.2)
+        coffee_tale_box = CollisionBox(0.0, 0.9, 1.6, 0.2)
         coffee_table_node = coffee_table.attach_new_node(CollisionNode('coffee_table_cnode'))
         coffee_table_node.set_pos(0.0, 0.1, 0.4)
         coffee_table_node.node().add_solid(coffee_tale_box)
