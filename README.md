@@ -1,5 +1,5 @@
 
-###### Installing source:
+##### Installing source:
 - Navigate to the <code>panda3d_room/</code> directory and then
 create and activate a virtualenv. Install the requirements.
 
@@ -7,11 +7,11 @@ create and activate a virtualenv. Install the requirements.
 source venv/Scripts/activate
 pip install -r requirements.txt</code></pre>
 
-###### Run development:
+##### Run development:
 
 <pre><code>python main.py</code></pre>
 
-###### Build Windows binaries for distribution:
+##### Build Windows binaries for distribution:
 
 <pre><code>python setup.py build_apps</code></pre>
 
@@ -19,7 +19,7 @@ pip install -r requirements.txt</code></pre>
 above command. Double-click the build/panda3d_room.exe
 to open the app.
 
-###### 3d-models
+##### 3d-models
 - The glb/gltf files in assets/ were converted
 to bam by activating the venv and running:
 
