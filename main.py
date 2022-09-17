@@ -62,6 +62,7 @@ class Panda3dRoom(ShowBase):
 
         self.camera.set_pos(0, -20, 9.7)
         self.camera.set_p(-15)
+        self.camLens.set_near(18)
 
         self.task_mgr.add(self.update, 'Update')
         self.is_down = self.mouseWatcherNode.is_button_down
