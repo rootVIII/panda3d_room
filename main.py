@@ -127,6 +127,72 @@ class Panda3dRoom(ShowBase):
             },
             'Walk_WalkBack': {
                 'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'WalkBack')
+            },
+            'Walk_StrafeRight': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'StrafeRight')
+            },
+            'StrafeRight_Walk': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'Walk')
+            },
+            'StrafeRight_WalkBack': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'WalkBack')
+            },
+            'WalkBack_StrafeRight': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'StrafeRight')
+            },
+            'StrafeRight_Run': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'Run')
+            },
+            'Run_StrafeRight': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'StrafeRight')
+            },
+            'StrafeRight_Punch': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'Punch')
+            },
+            'Punch_StrafeRight': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'StrafeRight')
+            },
+            'StrafeRight_Idle': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'Idle')
+            },
+            'Idle_StrafeRight': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'StrafeRight')
+            },
+            'StrafeRight_StrafeLeft': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'StrafeLeft')
+            },
+            'StrafeLeft_StrafeRight': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'StrafeRight')
+            },
+            'Walk_StrafeLeft': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'StrafeLeft')
+            },
+            'StrafeLeft_Walk': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'Walk')
+            },
+            'StrafeLeft_WalkBack': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'WalkBack')
+            },
+            'WalkBack_StrafeLeft': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'StrafeLeft')
+            },
+            'StrafeLeft_Run': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'Run')
+            },
+            'Run_StrafeLeft': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'StrafeLeft')
+            },
+            'StrafeLeft_Punch': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'Punch')
+            },
+            'Punch_StrafeLeft': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'StrafeLeft')
+            },
+            'StrafeLeft_Idle': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'Idle')
+            },
+            'Idle_StrafeLeft': {
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'StrafeLeft')
             }
         }
 
@@ -134,8 +200,10 @@ class Panda3dRoom(ShowBase):
         self.down = KeyboardButton.down()
         self.left = KeyboardButton.left()
         self.right = KeyboardButton.right()
-        self.p = KeyboardButton.ascii_key('p')
-        self.shift = KeyboardButton.shift()
+        self.a = KeyboardButton.ascii_key('a')
+        self.s = KeyboardButton.ascii_key('s')
+        self.d = KeyboardButton.ascii_key('d')
+        self.w = KeyboardButton.ascii_key('w')
 
         self.tmp_node = self.render.attach_new_node('cam-%s' % self.ninja.get_name())  # noqa
         self.turn_rate = 1.5
@@ -171,6 +239,12 @@ class Panda3dRoom(ShowBase):
     def punch(self):
         self.animate_model('Punch')
 
+    def strafe_left(self):
+        self.animate_model('StrafeLeft')
+
+    def strafe_right(self):
+        self.animate_model('StrafeRight')
+
     def turn_left(self):
         self.ninja_heading += 3
         self.ninja.set_h(self.ninja_heading)  # noqa
@@ -186,14 +260,18 @@ class Panda3dRoom(ShowBase):
             self.turn_right()
 
         if self.is_down(self.up):
-            if self.is_down(self.shift):
+            if self.is_down(self.w):
                 self.run_forward()
             else:
                 self.walk_forward()
         elif self.is_down(self.down):
             self.walk_backward()
-        elif self.is_down(self.p):
+        elif self.is_down(self.s):
             self.punch()
+        elif self.is_down(self.a):
+            self.strafe_left()
+        elif self.is_down(self.d):
+            self.strafe_right()
         else:
             self.stop()
 
@@ -205,6 +283,10 @@ class Panda3dRoom(ShowBase):
             self.ninja.set_y(self.ninja, -0.05)
         elif action == 'Run':
             self.ninja.set_y(self.ninja, 0.3)
+        elif action == 'StrafeLeft':
+            self.ninja.set_x(self.ninja, -0.1)
+        elif action == 'StrafeRight':
+            self.ninja.set_x(self.ninja, 0.1)
 
         self.ninja.set_h(self.ninja_heading)  # noqa
         self.tmp_node.set_pos(self.ninja.get_pos())  # noqa
@@ -212,12 +294,6 @@ class Panda3dRoom(ShowBase):
         turn_diff = self.ninja.get_h() - heading  # noqa
         self.tmp_node.set_h(heading + turn_diff * self.turn_rate)
         self.camera.reparent_to(self.tmp_node)
-
-    def update(self, task):
-        _ = task
-        self.check_keys()
-        self.move_ninja()
-        return Task.cont
 
     def set_scene_collision_nodes(self):
         # self.scene.ls()
@@ -293,6 +369,12 @@ class Panda3dRoom(ShowBase):
         sofa2_box_node.node().add_solid(sofa2_box)
         # sofa2_box_node.show()
         self.pusher.add_collider(sofa2_box_node, sofas)  # noqa
+
+    def update(self, task):
+        _ = task
+        self.check_keys()
+        self.move_ninja()
+        return Task.cont
 
 
 if __name__ == '__main__':
