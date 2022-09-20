@@ -218,7 +218,7 @@ class Panda3dRoom(ShowBase):
         self.accept('disconnect-device', self.disconnect_input_device)
 
     def connect_input_device(self, device):
-        if device.device_class == InputDevice.DeviceClass.gamepad and not self.gamepad:
+        if not self.gamepad and device.device_class == InputDevice.DeviceClass.gamepad:
             print(f'connecting {device.name}')
             self.gamepad = device
             self.attach_input_device(device, prefix='gamepad')
