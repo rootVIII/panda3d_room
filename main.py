@@ -3,7 +3,7 @@ from direct.showbase.ShowBase import ShowBase  # noqa
 from direct.interval.IntervalGlobal import LerpAnimInterval  # noqa
 from direct.task import Task  # noqa
 from direct.filter.CommonFilters import CommonFilters  # noqa
-from panda3d.core import KeyboardButton, AmbientLight
+from panda3d.core import InputDevice, KeyboardButton, AmbientLight
 from panda3d.core import DirectionalLight, WindowProperties
 from panda3d.core import CollisionNode, CollisionBox, CollisionCapsule
 from panda3d.core import CollisionTraverser, CollisionHandlerPusher
@@ -208,6 +208,26 @@ class Panda3dRoom(ShowBase):
 
         self.tmp_node = self.render.attach_new_node('cam-%s' % self.ninja.get_name())  # noqa
         self.turn_rate = 1.5
+
+        self.gamepad = None
+        for device in self.devices.get_devices(InputDevice.DeviceClass.gamepad):
+            if 'xbox' in device.name.lower():
+                self.connect_input_device(device)
+
+        self.accept('connect-device', self.connect_input_device)
+        self.accept('disconnect-device', self.disconnect_input_device)
+
+    def connect_input_device(self, device):
+        if device.device_class == InputDevice.DeviceClass.gamepad and not self.gamepad:
+            print(f'connecting {device.name}')
+            self.gamepad = device
+            self.attach_input_device(device, prefix='gamepad')
+
+    def disconnect_input_device(self, device):
+        if self.gamepad == device:
+            print(f'disconnecting {device.name}')
+            self.detach_input_device(device)
+            self.gamepad = None
 
     def finish_running_lerps(self):
         _ = [lerp['lerp'].finish() for _, lerp in self.animations.items()  # noqa
