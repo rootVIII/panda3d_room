@@ -26,14 +26,24 @@ to bam by activating the venv and running:
 <pre><code>gltf2bam assets/ninja.glb assets/ninja.bam</code></pre>
 
 #### Keyboard controls:
-<pre><code>s       -> punch
-d       -> strafe right
-a       -> strafe left
-w + up  -> run
-up      -> walk
+<pre><code>up      -> walk
 left    -> rotate ninja/cam left
 right   -> rotate ninja/cam right
-down    -> walk backwards</code></pre>
+down    -> walk backwards
+w + up  -> run
+s       -> punch
+d       -> strafe right
+a       -> strafe left</code></pre>
+
+#### Xbox controls:
+<pre><code>dpad-up         -> walk
+dpad-left       -> rotate ninja/cam left
+dpad-right      -> rotate ninja/cam right
+dpad-down       -> walk backwards
+a + dpad-up     -> run
+x               -> punch
+left-trigger    -> strafe left
+right-trigger   -> strafe right</code></pre>
 
 
 <br><br>
