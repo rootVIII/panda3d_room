@@ -1,9 +1,10 @@
 from direct.actor.Actor import Actor  # noqa
 from direct.showbase.ShowBase import ShowBase  # noqa
+from direct.showbase.InputStateGlobal import inputState  # noqa
 from direct.interval.IntervalGlobal import LerpAnimInterval  # noqa
 from direct.task import Task  # noqa
 from direct.filter.CommonFilters import CommonFilters  # noqa
-from panda3d.core import InputDevice, KeyboardButton, AmbientLight
+from panda3d.core import InputDevice, KeyboardButton, GamepadButton, AmbientLight
 from panda3d.core import DirectionalLight, WindowProperties
 from panda3d.core import CollisionNode, CollisionBox, CollisionCapsule
 from panda3d.core import CollisionTraverser, CollisionHandlerPusher
@@ -65,7 +66,21 @@ class Panda3dRoom(ShowBase):
         self.camLens.set_near(18)
 
         self.task_mgr.add(self.update, 'Update')
+
         self.is_down = self.mouseWatcherNode.is_button_down
+
+        inputState.watch_with_modifiers('dpad_down', 'gamepad-dpad_down')
+        inputState.watch_with_modifiers('dpad_left', 'gamepad-dpad_left')
+        inputState.watch_with_modifiers('dpad_right', 'gamepad-dpad_right')
+        inputState.watch_with_modifiers('dpad_up', 'gamepad-dpad_up')
+        inputState.watch_with_modifiers('face_x', 'gamepad-face_x')
+        inputState.watch_with_modifiers('lshoulder', 'gamepad-lshoulder')
+        inputState.watch_with_modifiers('rshoulder', 'gamepad-rshoulder')
+        inputState.watch_with_modifiers('face_a', 'gamepad-face_a')
+
+        # TODO: add kick or and extra punch:
+        # inputState.watch_with_modifiers('face_b', 'gamepad-face_b')
+        # inputState.watch_with_modifiers('face_y', 'gamepad-face_y')
 
         self.current_action = 'Walk_Idle'
         self.animations = {
@@ -206,6 +221,8 @@ class Panda3dRoom(ShowBase):
         self.d = KeyboardButton.ascii_key('d')
         self.w = KeyboardButton.ascii_key('w')
 
+        self.gamepad_down = GamepadButton.dpad_down()
+
         self.tmp_node = self.render.attach_new_node('cam-%s' % self.ninja.get_name())  # noqa
         self.turn_rate = 1.5
 
@@ -216,6 +233,7 @@ class Panda3dRoom(ShowBase):
 
         self.accept('connect-device', self.connect_input_device)
         self.accept('disconnect-device', self.disconnect_input_device)
+        # self.accept('gamepad-start', self.pause)
 
     def connect_input_device(self, device):
         if not self.gamepad and device.device_class == InputDevice.DeviceClass.gamepad:
@@ -275,23 +293,23 @@ class Panda3dRoom(ShowBase):
         self.ninja.set_h(self.ninja_heading)  # noqa
 
     def check_keys(self):
-        if self.is_down(self.left):
+        if self.is_down(self.left) or inputState.is_set('dpad_left'):
             self.turn_left()
-        if self.is_down(self.right):
+        if self.is_down(self.right) or inputState.is_set('dpad_right'):
             self.turn_right()
 
-        if self.is_down(self.up):
-            if self.is_down(self.w):
+        if self.is_down(self.up) or inputState.is_set('dpad_up'):
+            if self.is_down(self.w) or inputState.is_set('face_a'):
                 self.run_forward()
             else:
                 self.walk_forward()
-        elif self.is_down(self.down):
+        elif self.is_down(self.down) or inputState.is_set('dpad_down'):
             self.walk_backward()
-        elif self.is_down(self.s):
+        elif self.is_down(self.s) or inputState.is_set('face_x'):
             self.punch()
-        elif self.is_down(self.a):
+        elif self.is_down(self.a) or inputState.is_set('lshoulder'):
             self.strafe_left()
-        elif self.is_down(self.d):
+        elif self.is_down(self.d) or inputState.is_set('rshoulder'):
             self.strafe_right()
         else:
             self.stop()
@@ -390,6 +408,10 @@ class Panda3dRoom(ShowBase):
         sofa2_box_node.node().add_solid(sofa2_box)
         # sofa2_box_node.show()
         self.pusher.add_collider(sofa2_box_node, sofas)  # noqa
+
+    @staticmethod
+    def test(button):
+        print(f'button: {button}')
 
     def update(self, task):
         _ = task
