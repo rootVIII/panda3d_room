@@ -73,10 +73,10 @@ class Panda3dRoom(ShowBase):
         InputState.watch_with_modifiers('dpad_left', 'gamepad-dpad_left')
         InputState.watch_with_modifiers('dpad_right', 'gamepad-dpad_right')
         InputState.watch_with_modifiers('dpad_up', 'gamepad-dpad_up')
-        InputState.watch_with_modifiers('face_x', 'gamepad-face_x')
         InputState.watch_with_modifiers('lshoulder', 'gamepad-lshoulder')
         InputState.watch_with_modifiers('rshoulder', 'gamepad-rshoulder')
         InputState.watch_with_modifiers('face_a', 'gamepad-face_a')
+        InputState.watch_with_modifiers('face_x', 'gamepad-face_x')
 
         # TODO: add kick or and extra punch:
         # inputState.watch_with_modifiers('face_b', 'gamepad-face_b')
