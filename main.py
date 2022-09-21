@@ -1,6 +1,6 @@
 from direct.actor.Actor import Actor  # noqa
 from direct.showbase.ShowBase import ShowBase  # noqa
-from direct.showbase.InputStateGlobal import inputState  # noqa
+from direct.showbase.InputStateGlobal import inputState as InputState  # noqa
 from direct.interval.IntervalGlobal import LerpAnimInterval  # noqa
 from direct.task import Task  # noqa
 from direct.filter.CommonFilters import CommonFilters  # noqa
@@ -69,14 +69,14 @@ class Panda3dRoom(ShowBase):
 
         self.is_down = self.mouseWatcherNode.is_button_down
 
-        inputState.watch_with_modifiers('dpad_down', 'gamepad-dpad_down')
-        inputState.watch_with_modifiers('dpad_left', 'gamepad-dpad_left')
-        inputState.watch_with_modifiers('dpad_right', 'gamepad-dpad_right')
-        inputState.watch_with_modifiers('dpad_up', 'gamepad-dpad_up')
-        inputState.watch_with_modifiers('face_x', 'gamepad-face_x')
-        inputState.watch_with_modifiers('lshoulder', 'gamepad-lshoulder')
-        inputState.watch_with_modifiers('rshoulder', 'gamepad-rshoulder')
-        inputState.watch_with_modifiers('face_a', 'gamepad-face_a')
+        InputState.watch_with_modifiers('dpad_down', 'gamepad-dpad_down')
+        InputState.watch_with_modifiers('dpad_left', 'gamepad-dpad_left')
+        InputState.watch_with_modifiers('dpad_right', 'gamepad-dpad_right')
+        InputState.watch_with_modifiers('dpad_up', 'gamepad-dpad_up')
+        InputState.watch_with_modifiers('face_x', 'gamepad-face_x')
+        InputState.watch_with_modifiers('lshoulder', 'gamepad-lshoulder')
+        InputState.watch_with_modifiers('rshoulder', 'gamepad-rshoulder')
+        InputState.watch_with_modifiers('face_a', 'gamepad-face_a')
 
         # TODO: add kick or and extra punch:
         # inputState.watch_with_modifiers('face_b', 'gamepad-face_b')
@@ -293,23 +293,23 @@ class Panda3dRoom(ShowBase):
         self.ninja.set_h(self.ninja_heading)  # noqa
 
     def check_keys(self):
-        if self.is_down(self.left) or inputState.is_set('dpad_left'):
+        if self.is_down(self.left) or InputState.is_set('dpad_left'):
             self.turn_left()
-        if self.is_down(self.right) or inputState.is_set('dpad_right'):
+        if self.is_down(self.right) or InputState.is_set('dpad_right'):
             self.turn_right()
 
-        if self.is_down(self.up) or inputState.is_set('dpad_up'):
-            if self.is_down(self.w) or inputState.is_set('face_a'):
+        if self.is_down(self.up) or InputState.is_set('dpad_up'):
+            if self.is_down(self.w) or InputState.is_set('face_a'):
                 self.run_forward()
             else:
                 self.walk_forward()
-        elif self.is_down(self.down) or inputState.is_set('dpad_down'):
+        elif self.is_down(self.down) or InputState.is_set('dpad_down'):
             self.walk_backward()
-        elif self.is_down(self.s) or inputState.is_set('face_x'):
+        elif self.is_down(self.s) or InputState.is_set('face_x'):
             self.punch()
-        elif self.is_down(self.a) or inputState.is_set('lshoulder'):
+        elif self.is_down(self.a) or InputState.is_set('lshoulder'):
             self.strafe_left()
-        elif self.is_down(self.d) or inputState.is_set('rshoulder'):
+        elif self.is_down(self.d) or InputState.is_set('rshoulder'):
             self.strafe_right()
         else:
             self.stop()
