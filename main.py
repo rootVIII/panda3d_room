@@ -3,7 +3,6 @@ from direct.showbase.ShowBase import ShowBase  # noqa
 from direct.showbase.InputStateGlobal import inputState as InputState  # noqa
 from direct.interval.IntervalGlobal import LerpAnimInterval  # noqa
 from direct.task import Task  # noqa
-from direct.filter.CommonFilters import CommonFilters  # noqa
 from panda3d.core import InputDevice, KeyboardButton, AmbientLight
 from panda3d.core import DirectionalLight, WindowProperties
 from panda3d.core import CollisionNode, CollisionBox, CollisionCapsule
@@ -22,9 +21,6 @@ class Panda3dRoom(ShowBase):
         self.scene = self.loader.load_model('assets/Home2_Night.bam')
         self.scene.reparent_to(self.render)
         self.set_background_color(0, 0, 0, 1.0)
-
-        filters = CommonFilters(self.win, self.cam)
-        filters.setBlurSharpen(0.8)
 
         self.cTrav = CollisionTraverser()
         self.pusher = CollisionHandlerPusher()
@@ -62,7 +58,7 @@ class Panda3dRoom(ShowBase):
 
         self.camera.set_pos(0, -20, 9.7)
         self.camera.set_p(-15)
-        self.camLens.set_near(17)
+        self.camLens.set_near(0.1)
 
         self.task_mgr.add(self.update, 'Update')
 
