@@ -4,7 +4,7 @@ from direct.showbase.InputStateGlobal import inputState as InputState  # noqa
 from direct.interval.IntervalGlobal import LerpAnimInterval  # noqa
 from direct.task import Task  # noqa
 from direct.filter.CommonFilters import CommonFilters  # noqa
-from panda3d.core import InputDevice, KeyboardButton, GamepadButton, AmbientLight
+from panda3d.core import InputDevice, KeyboardButton, AmbientLight
 from panda3d.core import DirectionalLight, WindowProperties
 from panda3d.core import CollisionNode, CollisionBox, CollisionCapsule
 from panda3d.core import CollisionTraverser, CollisionHandlerPusher
@@ -40,7 +40,6 @@ class Panda3dRoom(ShowBase):
         dir_light_node.set_hpr(60, 0, 90)
         self.render.set_light(dir_light_node)
 
-        # remove this to use mouse left, middle, and right btns to position
         self.disable_mouse()
 
         self.scene.set_scale(4, 4, 4)
@@ -63,7 +62,7 @@ class Panda3dRoom(ShowBase):
 
         self.camera.set_pos(0, -20, 9.7)
         self.camera.set_p(-15)
-        self.camLens.set_near(18)
+        self.camLens.set_near(17)
 
         self.task_mgr.add(self.update, 'Update')
 
@@ -78,7 +77,7 @@ class Panda3dRoom(ShowBase):
         InputState.watch_with_modifiers('face_a', 'gamepad-face_a')
         InputState.watch_with_modifiers('face_x', 'gamepad-face_x')
 
-        # TODO: add kick or and extra punch:
+        # TODO: add kick or an extra punch:
         # inputState.watch_with_modifiers('face_b', 'gamepad-face_b')
         # inputState.watch_with_modifiers('face_y', 'gamepad-face_y')
 
@@ -220,8 +219,6 @@ class Panda3dRoom(ShowBase):
         self.s = KeyboardButton.ascii_key('s')
         self.d = KeyboardButton.ascii_key('d')
         self.w = KeyboardButton.ascii_key('w')
-
-        self.gamepad_down = GamepadButton.dpad_down()
 
         self.tmp_node = self.render.attach_new_node('cam-%s' % self.ninja.get_name())  # noqa
         self.turn_rate = 1.5
