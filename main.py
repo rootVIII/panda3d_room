@@ -58,7 +58,7 @@ class Panda3dRoom(ShowBase):
 
         self.camera.set_pos(0, -20, 9.7)
         self.camera.set_p(-15)
-        self.camLens.set_near(0.1)
+        self.camLens.set_near(10.0)
 
         self.task_mgr.add(self.update, 'Update')
 
