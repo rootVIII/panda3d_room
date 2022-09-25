@@ -58,7 +58,7 @@ class Panda3dRoom(ShowBase):
 
         self.camera.set_pos(0, -20, 9.7)
         self.camera.set_p(-15)
-        self.camLens.set_near(10.0)
+        self.camLens.set_near(12)
 
         self.task_mgr.add(self.update, 'Update')
 
@@ -364,7 +364,7 @@ class Panda3dRoom(ShowBase):
         self.pusher.add_collider(curtain_wall_box_node, curtain_wall)  # noqa
 
         side_quest_wall = self.scene.find('fwaf')
-        side_quest_wall_box = CollisionBox(0.0, 0.2, 4.0, 0.6)
+        side_quest_wall_box = CollisionBox(0.0, 0.4, 4.0, 0.6)
         side_quest_wall_box_node = side_quest_wall.attach_new_node(CollisionNode('side_quest_wall_cnode'))
         side_quest_wall_box_node.set_pos(-2.2, 1.3, 0.0)
         side_quest_wall_box_node.node().add_solid(side_quest_wall_box)
