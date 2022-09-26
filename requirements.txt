@@ -1,0 +1,2 @@
+panda3d==1.10.12
+panda3d-gltf
