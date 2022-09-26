@@ -56,9 +56,9 @@ class Panda3dRoom(ShowBase):
         self.ninja_heading = 0
         self.ninja.enable_blend()
 
-        self.camera.set_pos(0, -20, 9.7)
+        self.camera.set_pos(0, -22, 9.7)
         self.camera.set_p(-15)
-        self.camLens.set_near(12)
+        self.camLens.set_near(14)
 
         self.task_mgr.add(self.update, 'Update')
 
@@ -72,7 +72,6 @@ class Panda3dRoom(ShowBase):
         InputState.watch_with_modifiers('rshoulder', 'gamepad-rshoulder')
         InputState.watch_with_modifiers('face_a', 'gamepad-face_a')
         InputState.watch_with_modifiers('face_x', 'gamepad-face_x')
-
         # TODO: add kick or an extra punch:
         # inputState.watch_with_modifiers('face_b', 'gamepad-face_b')
         # inputState.watch_with_modifiers('face_y', 'gamepad-face_y')
@@ -329,7 +328,8 @@ class Panda3dRoom(ShowBase):
 
     def set_scene_collision_nodes(self):
         # self.scene.ls()
-        body_capsule = CollisionCapsule(0, 0, 1.2, 0, 0, 4.0, 1.5)
+
+        body_capsule = CollisionCapsule(0.0, 0.0, 1.2, 0.0, 0.0, 4.0, 1.5)
         body_cnode = self.ninja.attach_new_node(CollisionNode('body_cnode'))  # noqa
         body_cnode.node().add_solid(body_capsule)
         # body_cnode.show()
@@ -347,42 +347,42 @@ class Panda3dRoom(ShowBase):
         self.pusher.add_collider(coffee_table_node, coffee_table)  # noqa
 
         seat = self.scene.find('Seat')
-        seat_box = CollisionBox(0.0, 0.7, 0.6, 0.3)
+        seat_box = CollisionBox(0.0, 0.7, 0.6, 1.7)
         seat_node = seat.attach_new_node(CollisionNode('seat_cnode'))
-        seat_node.set_pos(-1.8, -8.0, 0.0)
+        seat_node.set_pos(-1.8, -8.0, 1.5)
         seat_node.set_h(40)
         seat_node.node().add_solid(seat_box)
         # seat_node.show()
         self.pusher.add_collider(seat_node, seat)  # noqa
 
         curtain_wall = self.scene.find('Curtain001')
-        curtain_wall_box = CollisionBox(0.0, 2.2, 0.2, 0.6)
+        curtain_wall_box = CollisionBox(0.0, 2.2, 0.2, 1.7)
         curtain_wall_box_node = curtain_wall.attach_new_node(CollisionNode('curtain_wall_cnode'))
-        curtain_wall_box_node.set_pos(0.7, -2.2, 0.0)
+        curtain_wall_box_node.set_pos(0.7, -2.2, 1.9)
         curtain_wall_box_node.node().add_solid(curtain_wall_box)
         # curtain_wall_box_node.show()
         self.pusher.add_collider(curtain_wall_box_node, curtain_wall)  # noqa
 
         side_quest_wall = self.scene.find('fwaf')
-        side_quest_wall_box = CollisionBox(0.0, 0.4, 4.0, 0.6)
+        side_quest_wall_box = CollisionBox(0.0, 0.4, 4.0, 1.7)
         side_quest_wall_box_node = side_quest_wall.attach_new_node(CollisionNode('side_quest_wall_cnode'))
-        side_quest_wall_box_node.set_pos(-2.2, 1.3, 0.0)
+        side_quest_wall_box_node.set_pos(-2.2, 1.3, 1.9)
         side_quest_wall_box_node.node().add_solid(side_quest_wall_box)
         # side_quest_wall_box_node.show()
         self.pusher.add_collider(side_quest_wall_box_node, side_quest_wall)  # noqa
 
         door_wall = self.scene.find('Door')
-        door_wall_box = CollisionBox(0.0, 3.8, 0.2, 0.6)
+        door_wall_box = CollisionBox(0.0, 3.8, 0.2, 1.7)
         door_wall_box_node = door_wall.attach_new_node(CollisionNode('door_wall_cnode'))
-        door_wall_box_node.set_pos(1.8, -0.4, 0.0)
+        door_wall_box_node.set_pos(1.8, -0.4, 1.9)
         door_wall_box_node.node().add_solid(door_wall_box)
         # door_wall_box_node.show()
         self.pusher.add_collider(door_wall_box_node, door_wall)  # noqa
 
         plant_wall = self.scene.find('Sphere002')
-        plant_wall_box = CollisionBox(0.0, 0.2, 2.7, 0.6)
+        plant_wall_box = CollisionBox(0.0, 0.2, 2.7, 1.7)
         plant_wall_box_node = plant_wall.attach_new_node(CollisionNode('plant_wall_cnode'))
-        plant_wall_box_node.set_pos(-4.5, -1.6, 0.0)
+        plant_wall_box_node.set_pos(-4.5, -1.6, 1.8)
         plant_wall_box_node.set_h(10)
         plant_wall_box_node.node().add_solid(plant_wall_box)
         # plant_wall_box_node.show()
@@ -401,10 +401,6 @@ class Panda3dRoom(ShowBase):
         sofa2_box_node.node().add_solid(sofa2_box)
         # sofa2_box_node.show()
         self.pusher.add_collider(sofa2_box_node, sofas)  # noqa
-
-    @staticmethod
-    def test(button):
-        print(f'button: {button}')
 
     def update(self, task):
         _ = task
