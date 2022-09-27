@@ -1,19 +1,18 @@
-from direct.actor.Actor import Actor  # noqa
 from direct.showbase.ShowBase import ShowBase  # noqa
-from direct.interval.IntervalGlobal import LerpAnimInterval  # noqa
 from direct.task import Task  # noqa
-from direct.filter.CommonFilters import CommonFilters  # noqa
 from panda3d.core import KeyboardButton, AmbientLight
 from panda3d.core import DirectionalLight, WindowProperties
 from panda3d.core import CollisionNode, CollisionBox, CollisionCapsule
 from panda3d.core import CollisionTraverser, CollisionHandlerPusher
+from components.ninja import Ninja
 
 
-class Panda3dRoom(ShowBase):
+class Panda3dRoom(ShowBase, Ninja):
 
     # noinspection PyArgumentList
     def __init__(self):
         ShowBase.__init__(self)
+        Ninja.__init__(self)
         props = WindowProperties()
         props.setTitle('panda3d room')
         self.win.requestProperties(props)
@@ -21,9 +20,6 @@ class Panda3dRoom(ShowBase):
         self.scene = self.loader.load_model('assets/Home2_Night.bam')
         self.scene.reparent_to(self.render)
         self.set_background_color(0, 0, 0, 1.0)
-
-        filters = CommonFilters(self.win, self.cam)
-        filters.setBlurSharpen(0.8)
 
         self.cTrav = CollisionTraverser()
         self.pusher = CollisionHandlerPusher()
@@ -35,7 +31,7 @@ class Panda3dRoom(ShowBase):
 
         dir_light = DirectionalLight('directional')
         dir_light.set_color_temperature(4500)  # noqa
-        dir_light_node = self.render.attachNewNode(dir_light)
+        dir_light_node = self.render.attach_new_node(dir_light)
         dir_light_node.set_hpr(60, 0, 90)
         self.render.set_light(dir_light_node)
 
@@ -45,157 +41,22 @@ class Panda3dRoom(ShowBase):
         self.scene.set_scale(4, 4, 4)
         self.scene.set_pos(0, 0, 0)
 
-        self.ninja = Actor('assets/ninja.bam')
         self.ninja.reparent_to(self.render)
-
         new_ninja_pos = self.scene.find('CoffeeTable').get_pos()
         new_ninja_pos[0] += 5.0
         new_ninja_pos[2] -= 0.4
         self.ninja.set_pos(new_ninja_pos)
 
-        self.ninja.loop('Idle')
+        self.tmp_node = self.render.attach_new_node('cam-%s' % self.ninja.get_name())  # noqa
 
         self.set_scene_collision_nodes()
 
-        self.ninja_heading = 0
-        self.ninja.enable_blend()
-
         self.camera.set_pos(0, -20, 9.7)
         self.camera.set_p(-15)
-        self.camLens.set_near(18)
+        self.camLens.set_near(12)
 
         self.task_mgr.add(self.update, 'Update')
         self.is_down = self.mouseWatcherNode.is_button_down
-
-        self.current_action = 'Walk_Idle'
-        self.animations = {
-            'Idle_Walk': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'Walk')
-            },
-            'Walk_Idle': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'Idle')
-            },
-            'Idle_WalkBack': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'WalkBack')
-            },
-            'WalkBack_Idle': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'Idle')
-            },
-            'Idle_Run': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'Run')
-            },
-            'Run_Idle': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'Idle')
-            },
-            'Run_Walk': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'Walk')
-            },
-            'Walk_Run': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'Run')
-            },
-            'Idle_Punch': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'Punch')
-            },
-            'Punch_Idle': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'Idle')
-            },
-            'Run_Punch': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'Punch')
-            },
-            'Punch_Run': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'Run')
-            },
-            'Walk_Punch': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'Punch')
-            },
-            'Punch_Walk': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'Walk')
-            },
-            'WalkBack_Punch': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'Punch')
-            },
-            'Punch_WalkBack': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'WalkBack')
-            },
-            'WalkBack_Run': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'Run')
-            },
-            'Run_WalkBack': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'WalkBack')
-            },
-            'WalkBack_Walk': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'Walk')
-            },
-            'Walk_WalkBack': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'WalkBack')
-            },
-            'Walk_StrafeRight': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'StrafeRight')
-            },
-            'StrafeRight_Walk': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'Walk')
-            },
-            'StrafeRight_WalkBack': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'WalkBack')
-            },
-            'WalkBack_StrafeRight': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'StrafeRight')
-            },
-            'StrafeRight_Run': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'Run')
-            },
-            'Run_StrafeRight': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'StrafeRight')
-            },
-            'StrafeRight_Punch': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'Punch')
-            },
-            'Punch_StrafeRight': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'StrafeRight')
-            },
-            'StrafeRight_Idle': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'Idle')
-            },
-            'Idle_StrafeRight': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'StrafeRight')
-            },
-            'StrafeRight_StrafeLeft': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'StrafeLeft')
-            },
-            'StrafeLeft_StrafeRight': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'StrafeRight')
-            },
-            'Walk_StrafeLeft': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'StrafeLeft')
-            },
-            'StrafeLeft_Walk': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'Walk')
-            },
-            'StrafeLeft_WalkBack': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'WalkBack')
-            },
-            'WalkBack_StrafeLeft': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'StrafeLeft')
-            },
-            'StrafeLeft_Run': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'Run')
-            },
-            'Run_StrafeLeft': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'StrafeLeft')
-            },
-            'StrafeLeft_Punch': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'Punch')
-            },
-            'Punch_StrafeLeft': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'StrafeLeft')
-            },
-            'StrafeLeft_Idle': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'Idle')
-            },
-            'Idle_StrafeLeft': {
-                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'StrafeLeft')
-            }
-        }
 
         self.up = KeyboardButton.up()
         self.down = KeyboardButton.down()
@@ -205,54 +66,6 @@ class Panda3dRoom(ShowBase):
         self.s = KeyboardButton.ascii_key('s')
         self.d = KeyboardButton.ascii_key('d')
         self.w = KeyboardButton.ascii_key('w')
-
-        self.tmp_node = self.render.attach_new_node('cam-%s' % self.ninja.get_name())  # noqa
-        self.turn_rate = 1.5
-
-    def finish_running_lerps(self):
-        _ = [lerp['lerp'].finish() for _, lerp in self.animations.items()  # noqa
-             if lerp['lerp'].is_playing()]  # noqa
-
-    def animate_model(self, new_action):
-        _, old_action = self.current_action.split('_')
-        if old_action != new_action:
-            self.finish_running_lerps()
-            self.current_action = f'{old_action}_{new_action}'
-            self.animations[self.current_action]['lerp'].start()  # noqa
-
-            if new_action != 'Punch':
-                self.ninja.loop(new_action)
-            else:
-                self.ninja.play(new_action)
-
-    def walk_forward(self):
-        self.animate_model('Walk')
-
-    def run_forward(self):
-        self.animate_model('Run')
-
-    def walk_backward(self):
-        self.animate_model('WalkBack')
-
-    def stop(self):
-        self.animate_model('Idle')
-
-    def punch(self):
-        self.animate_model('Punch')
-
-    def strafe_left(self):
-        self.animate_model('StrafeLeft')
-
-    def strafe_right(self):
-        self.animate_model('StrafeRight')
-
-    def turn_left(self):
-        self.ninja_heading += 3
-        self.ninja.set_h(self.ninja_heading)  # noqa
-
-    def turn_right(self):
-        self.ninja_heading -= 3
-        self.ninja.set_h(self.ninja_heading)  # noqa
 
     def check_keys(self):
         if self.is_down(self.left):
@@ -298,7 +111,7 @@ class Panda3dRoom(ShowBase):
 
     def set_scene_collision_nodes(self):
         # self.scene.ls()
-        body_capsule = CollisionCapsule(0, 0, 1.2, 0, 0, 4.0, 1.5)
+        body_capsule = CollisionCapsule(0.0, 0.0, 1.2, 0.0, 0.0, 4.0, 1.5)
         body_cnode = self.ninja.attach_new_node(CollisionNode('body_cnode'))  # noqa
         body_cnode.node().add_solid(body_capsule)
         # body_cnode.show()
