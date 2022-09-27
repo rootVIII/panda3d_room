@@ -1,7 +1,10 @@
 from setuptools import setup
 
+pkgs = ['components']
+
 setup(
     name='panda3d_room',
+    packages=pkgs,
     options={
         'build_apps': {
             'gui_apps': {
