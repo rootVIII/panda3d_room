@@ -10,7 +10,7 @@ class Ninja:
         self.ninja.enable_blend()
         self.current_action = 'Walk_Idle'
         self.animations = None
-        self.set_character_lerps(self.ninja)
+        self.set_lerps()
         self.turn_rate = 1.5
 
     def finish_running_lerps(self):
@@ -58,132 +58,132 @@ class Ninja:
         self.ninja_heading -= 3
         self.ninja.set_h(self.ninja_heading)  # noqa
 
-    def set_character_lerps(self, character):
+    def set_lerps(self):
         self.animations = {
             'Idle_Walk': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Idle', 'Walk')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'Walk')
             },
             'Walk_Idle': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Walk', 'Idle')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'Idle')
             },
             'Idle_WalkBack': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Idle', 'WalkBack')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'WalkBack')
             },
             'WalkBack_Idle': {
-                'lerp': LerpAnimInterval(character, 0.25, 'WalkBack', 'Idle')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'Idle')
             },
             'Idle_Run': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Idle', 'Run')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'Run')
             },
             'Run_Idle': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Run', 'Idle')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'Idle')
             },
             'Run_Walk': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Run', 'Walk')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'Walk')
             },
             'Walk_Run': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Walk', 'Run')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'Run')
             },
             'Idle_Punch': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Idle', 'Punch')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'Punch')
             },
             'Punch_Idle': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Punch', 'Idle')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'Idle')
             },
             'Run_Punch': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Run', 'Punch')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'Punch')
             },
             'Punch_Run': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Punch', 'Run')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'Run')
             },
             'Walk_Punch': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Walk', 'Punch')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'Punch')
             },
             'Punch_Walk': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Punch', 'Walk')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'Walk')
             },
             'WalkBack_Punch': {
-                'lerp': LerpAnimInterval(character, 0.25, 'WalkBack', 'Punch')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'Punch')
             },
             'Punch_WalkBack': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Punch', 'WalkBack')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'WalkBack')
             },
             'WalkBack_Run': {
-                'lerp': LerpAnimInterval(character, 0.25, 'WalkBack', 'Run')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'Run')
             },
             'Run_WalkBack': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Run', 'WalkBack')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'WalkBack')
             },
             'WalkBack_Walk': {
-                'lerp': LerpAnimInterval(character, 0.25, 'WalkBack', 'Walk')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'Walk')
             },
             'Walk_WalkBack': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Walk', 'WalkBack')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'WalkBack')
             },
             'Walk_StrafeRight': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Walk', 'StrafeRight')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'StrafeRight')
             },
             'StrafeRight_Walk': {
-                'lerp': LerpAnimInterval(character, 0.25, 'StrafeRight', 'Walk')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'Walk')
             },
             'StrafeRight_WalkBack': {
-                'lerp': LerpAnimInterval(character, 0.25, 'StrafeRight', 'WalkBack')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'WalkBack')
             },
             'WalkBack_StrafeRight': {
-                'lerp': LerpAnimInterval(character, 0.25, 'WalkBack', 'StrafeRight')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'StrafeRight')
             },
             'StrafeRight_Run': {
-                'lerp': LerpAnimInterval(character, 0.25, 'StrafeRight', 'Run')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'Run')
             },
             'Run_StrafeRight': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Run', 'StrafeRight')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'StrafeRight')
             },
             'StrafeRight_Punch': {
-                'lerp': LerpAnimInterval(character, 0.25, 'StrafeRight', 'Punch')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'Punch')
             },
             'Punch_StrafeRight': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Punch', 'StrafeRight')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'StrafeRight')
             },
             'StrafeRight_Idle': {
-                'lerp': LerpAnimInterval(character, 0.25, 'StrafeRight', 'Idle')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'Idle')
             },
             'Idle_StrafeRight': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Idle', 'StrafeRight')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'StrafeRight')
             },
             'StrafeRight_StrafeLeft': {
-                'lerp': LerpAnimInterval(character, 0.25, 'StrafeRight', 'StrafeLeft')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeRight', 'StrafeLeft')
             },
             'StrafeLeft_StrafeRight': {
-                'lerp': LerpAnimInterval(character, 0.25, 'StrafeLeft', 'StrafeRight')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'StrafeRight')
             },
             'Walk_StrafeLeft': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Walk', 'StrafeLeft')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Walk', 'StrafeLeft')
             },
             'StrafeLeft_Walk': {
-                'lerp': LerpAnimInterval(character, 0.25, 'StrafeLeft', 'Walk')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'Walk')
             },
             'StrafeLeft_WalkBack': {
-                'lerp': LerpAnimInterval(character, 0.25, 'StrafeLeft', 'WalkBack')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'WalkBack')
             },
             'WalkBack_StrafeLeft': {
-                'lerp': LerpAnimInterval(character, 0.25, 'WalkBack', 'StrafeLeft')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'WalkBack', 'StrafeLeft')
             },
             'StrafeLeft_Run': {
-                'lerp': LerpAnimInterval(character, 0.25, 'StrafeLeft', 'Run')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'Run')
             },
             'Run_StrafeLeft': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Run', 'StrafeLeft')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Run', 'StrafeLeft')
             },
             'StrafeLeft_Punch': {
-                'lerp': LerpAnimInterval(character, 0.25, 'StrafeLeft', 'Punch')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'Punch')
             },
             'Punch_StrafeLeft': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Punch', 'StrafeLeft')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Punch', 'StrafeLeft')
             },
             'StrafeLeft_Idle': {
-                'lerp': LerpAnimInterval(character, 0.25, 'StrafeLeft', 'Idle')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'StrafeLeft', 'Idle')
             },
             'Idle_StrafeLeft': {
-                'lerp': LerpAnimInterval(character, 0.25, 'Idle', 'StrafeLeft')
+                'lerp': LerpAnimInterval(self.ninja, 0.25, 'Idle', 'StrafeLeft')
             }
         }
