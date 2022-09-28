@@ -33,7 +33,7 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         self.render.set_light(dir_light_node)
 
         # remove this to use mouse left, middle, and right btns to position
-        # self.disable_mouse()
+        self.disable_mouse()
 
         self.scene.set_scale(4, 4, 4)
         self.scene.set_pos(0, 0, 0)
