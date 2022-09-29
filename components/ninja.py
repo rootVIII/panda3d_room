@@ -14,15 +14,14 @@ class Ninja:
         self.turn_rate = 1.5
 
     def finish_running_lerps(self):
-        _ = [lerp['lerp'].finish() for _, lerp in self.animations.items()  # noqa
-             if lerp['lerp'].is_playing()]  # noqa
+        _ = [lerp.finish() for _, lerp in self.animations.items() if lerp.is_playing()]  # noqa
 
     def animate_model(self, new_action):
         _, old_action = self.current_action.split('_')
         if old_action != new_action:
             self.finish_running_lerps()
             self.current_action = f'{old_action}_{new_action}'
-            self.animations[self.current_action]['lerp'].start()  # noqa
+            self.animations[self.current_action].start()  # noqa
 
             if new_action != 'Punch':
                 self.ninja.loop(new_action)
@@ -83,7 +82,7 @@ class Ninja:
             ('StrafeLeft', 'Idle'), ('Idle', 'StrafeLeft')
         )
         self.animations = {
-            f'{transition[0]}_{transition[1]}': {
-                'lerp':  LerpAnimInterval(self.ninja, 0.25, transition[0], transition[1])}
+            f'{transition[0]}_{transition[1]}':
+                LerpAnimInterval(self.ninja, 0.25, transition[0], transition[1])
             for transition in transitions
         }

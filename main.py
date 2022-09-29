@@ -1,6 +1,7 @@
 from direct.showbase.ShowBase import ShowBase  # noqa
+from direct.showbase.InputStateGlobal import inputState as InputState  # noqa
 from direct.task import Task  # noqa
-from panda3d.core import KeyboardButton, AmbientLight
+from panda3d.core import KeyboardButton, AmbientLight, InputDevice
 from panda3d.core import DirectionalLight, WindowProperties
 from components.ninja import Ninja
 from components.collisions import Collisions
@@ -44,7 +45,7 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         new_ninja_pos[2] -= 0.4
         self.ninja.set_pos(new_ninja_pos)
 
-        self.tmp_node = self.render.attach_new_node('cam-%s' % self.ninja.get_name())  # noqa
+        self.tmp_node = self.render.attach_new_node('ThirdPersonCam')  # noqa
 
         self.set_scene_collision_nodes(self.scene)
 
@@ -64,24 +65,78 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         self.d = KeyboardButton.ascii_key('d')
         self.w = KeyboardButton.ascii_key('w')
 
+        self.gamepad = None
+        for device in self.devices.get_devices(InputDevice.DeviceClass.gamepad):
+            if 'xbox' in device.name.lower():
+                self.connect_input_device(device)
+
+        InputState.watch_with_modifiers('dpad_down', 'gamepad-dpad_down')
+        InputState.watch_with_modifiers('dpad_left', 'gamepad-dpad_left')
+        InputState.watch_with_modifiers('dpad_right', 'gamepad-dpad_right')
+        InputState.watch_with_modifiers('dpad_up', 'gamepad-dpad_up')
+        InputState.watch_with_modifiers('lshoulder', 'gamepad-lshoulder')
+        InputState.watch_with_modifiers('rshoulder', 'gamepad-rshoulder')
+        InputState.watch_with_modifiers('face_a', 'gamepad-face_a')
+        InputState.watch_with_modifiers('face_x', 'gamepad-face_x')
+
+        self.accept('connect-device', self.connect_input_device)
+        self.accept('disconnect-device', self.disconnect_input_device)
+        # self.accept('gamepad-start', self.pause)
+        self.accept('ThirdPersonCam-into-NorthWallCnode', self.collide_north)
+        self.accept('ThirdPersonCam-into-SouthWallCnode', self.collide_south)
+        self.accept('ThirdPersonCam-into-EastWallCnode', self.collide_east)
+        self.accept('ThirdPersonCam-into-WestWallCnode', self.collide_west)
+
+    def connect_input_device(self, device):
+        if not self.gamepad and device.device_class == InputDevice.DeviceClass.gamepad:
+            print(f'connecting {device.name}')
+            self.gamepad = device
+            self.attach_input_device(device, prefix='gamepad')
+
+    def disconnect_input_device(self, device):
+        if self.gamepad == device:
+            print(f'disconnecting {device.name}')
+            self.detach_input_device(device)
+            self.gamepad = None
+
+    def collide_north(self, entry):
+        # TODO
+        print(entry)
+        print(self.ninja.get_name())
+
+    def collide_south(self, entry):
+        # TODO
+        print(entry)
+        print(self.ninja.get_name())
+
+    def collide_east(self, entry):
+        # TODO
+        print(entry)
+        print(self.ninja.get_name())
+
+    def collide_west(self, entry):
+        # TODO
+        print(entry)
+        print(self.ninja.get_name())
+
     def check_keys(self):
-        if self.is_down(self.left):
+        if self.is_down(self.left) or InputState.is_set('dpad_left'):
             self.turn_left()
-        if self.is_down(self.right):
+        if self.is_down(self.right) or InputState.is_set('dpad_right'):
             self.turn_right()
 
-        if self.is_down(self.up):
-            if self.is_down(self.w):
+        if self.is_down(self.up) or InputState.is_set('dpad_up'):
+            if self.is_down(self.w) or InputState.is_set('face_a'):
                 self.run_forward()
             else:
                 self.walk_forward()
-        elif self.is_down(self.down):
+        elif self.is_down(self.down) or InputState.is_set('dpad_down'):
             self.walk_backward()
-        elif self.is_down(self.s):
+        elif self.is_down(self.s) or InputState.is_set('face_x'):
             self.punch()
-        elif self.is_down(self.a):
+        elif self.is_down(self.a) or InputState.is_set('lshoulder'):
             self.strafe_left()
-        elif self.is_down(self.d):
+        elif self.is_down(self.d) or InputState.is_set('rshoulder'):
             self.strafe_right()
         else:
             self.stop()

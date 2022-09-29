@@ -6,11 +6,15 @@ class Collisions:
     def __init__(self):
         self.cTrav = CollisionTraverser()
         self.pusher = CollisionHandlerPusher()
+        self.pusher.add_in_pattern('ThirdPersonCam-into-NorthWallCnode')  # noqa
+        self.pusher.add_in_pattern('ThirdPersonCam-into-SouthWallCnode')  # noqa
+        self.pusher.add_in_pattern('ThirdPersonCam-into-EastWallCnode')  # noqa
+        self.pusher.add_in_pattern('ThirdPersonCam-into-WestWallCnode')  # noqa
 
     def set_scene_collision_nodes(self, scene):
         # scene.ls()
         body_capsule = CollisionCapsule(0.0, 0.0, 1.2, 0.0, 0.0, 4.0, 1.5)
-        body_cnode = self.ninja.attach_new_node(CollisionNode('body_cnode'))  # noqa
+        body_cnode = self.ninja.attach_new_node(CollisionNode('BodyCnode'))  # noqa
         body_cnode.node().add_solid(body_capsule)
         self.pusher.add_collider(body_cnode, self.ninja)  # noqa
         # Put FROM objects into traverser:
@@ -19,14 +23,14 @@ class Collisions:
         # Don't put the following static TO objects into the Traverser:
         coffee_table = scene.find('CoffeeTable')
         coffee_tale_box = CollisionBox(0.0, 0.9, 1.6, 0.2)
-        coffee_table_node = coffee_table.attach_new_node(CollisionNode('coffee_table_cnode'))
+        coffee_table_node = coffee_table.attach_new_node(CollisionNode('CoffeeTableCnode'))
         coffee_table_node.set_pos(0.0, 0.1, 0.4)
         coffee_table_node.node().add_solid(coffee_tale_box)
         self.pusher.add_collider(coffee_table_node, coffee_table)  # noqa
 
         seat = scene.find('Seat')
         seat_box = CollisionBox(0.0, 0.7, 0.6, 0.3)
-        seat_node = seat.attach_new_node(CollisionNode('seat_cnode'))
+        seat_node = seat.attach_new_node(CollisionNode('SeatCnode'))
         seat_node.set_pos(-1.8, -8.0, 0.0)
         seat_node.set_h(40)
         seat_node.node().add_solid(seat_box)
@@ -34,12 +38,12 @@ class Collisions:
 
         sofas = scene.find('SofaFinal')
         sofa1_box = CollisionBox(0.0, 1.0, 0.8, 0.6)
-        sofa1_box_node = sofas.attach_new_node(CollisionNode('sofa1_cnode'))
+        sofa1_box_node = sofas.attach_new_node(CollisionNode('Sofa1Cnode'))
         sofa1_box_node.set_pos(0.0, 2.5, 0.0)
         sofa1_box_node.node().add_solid(sofa1_box)
         self.pusher.add_collider(sofa1_box_node, sofas)  # noqa
         sofa2_box = CollisionBox(0.0, 0.3, 1.3, 0.6)
-        sofa2_box_node = sofas.attach_new_node(CollisionNode('sofa2_cnode'))
+        sofa2_box_node = sofas.attach_new_node(CollisionNode('Sofa2Cnode'))
         sofa2_box_node.set_pos(1.8, 0.1, 0.0)
         sofa2_box_node.node().add_solid(sofa2_box)
         self.pusher.add_collider(sofa2_box_node, sofas)  # noqa
@@ -49,23 +53,23 @@ class Collisions:
 
         walls = scene.find('Walls')
         north_wall_box = CollisionBox(*ns_wall_dims)
-        north_wall_box_node = walls.attach_new_node(CollisionNode('north_wall_cnode'))
+        north_wall_box_node = walls.attach_new_node(CollisionNode('NorthWallCnode'))
         north_wall_box_node.set_pos(0.2, -4.0, 2.0)
         north_wall_box_node.node().add_solid(north_wall_box)
         self.pusher.add_collider(north_wall_box_node, walls)  # noqa
         south_wall_box = CollisionBox(*ns_wall_dims)
-        south_wall_box_node = walls.attach_new_node(CollisionNode('south_wall_cnode'))
+        south_wall_box_node = walls.attach_new_node(CollisionNode('SouthWallCnode'))
         south_wall_box_node.set_pos(0.2, 4.5, 2.0)
         south_wall_box_node.node().add_solid(south_wall_box)
         self.pusher.add_collider(south_wall_box_node, walls)  # noqa
         east_wall_box = CollisionBox(*ew_wall_dims)
-        east_wall_box_node = walls.attach_new_node(CollisionNode('east_wall_cnode'))
+        east_wall_box_node = walls.attach_new_node(CollisionNode('EastWallCnode'))
         east_wall_box_node.set_pos(-2.0, 0.25, 2.0)
         east_wall_box_node.node().add_solid(east_wall_box)
         self.pusher.add_collider(east_wall_box_node, walls)  # noqa
 
         west_wall_box = CollisionBox(*ew_wall_dims)
-        west_wall_box_node = walls.attach_new_node(CollisionNode('west_wall_cnode'))
+        west_wall_box_node = walls.attach_new_node(CollisionNode('WestWallCnode'))
         west_wall_box_node.set_pos(2.6, 0.25, 2.0)
         west_wall_box_node.node().add_solid(west_wall_box)
         self.pusher.add_collider(west_wall_box_node, walls)  # noqa
