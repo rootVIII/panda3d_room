@@ -84,6 +84,8 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
 
         self.accept('fromnode-intonode', self.camera_collide)
 
+        self.finished_zoom = False
+
     def connect_input_device(self, device):
         if not self.gamepad and device.device_class == InputDevice.DeviceClass.gamepad:
             print(f'connecting {device.name}')
@@ -97,14 +99,14 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
             self.gamepad = None
 
     def camera_collide(self, entry):
-        # TODO
         from_node = str(entry.get_from_node_path())
         into_node = str(entry.get_into_node_path())
         if 'CameraCnode' in from_node and 'Walls' in into_node:
-            print(entry.get_from_node_path())
-            print(entry.get_into_node_path())
-
-        _ = self.ninja.get_name()
+            if not self.finished_zoom:
+                self.camera.set_pos(0, self.camera.get_y() + 7, 9.7)
+                self.finished_zoom = True
+                print(entry.get_from_node_path())
+                print(entry.get_into_node_path())
 
     def check_keys(self):
         if self.is_down(self.left) or InputState.is_set('dpad_left'):
