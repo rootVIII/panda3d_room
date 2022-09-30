@@ -33,7 +33,6 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         dir_light_node.set_hpr(60, 0, 90)
         self.render.set_light(dir_light_node)
 
-        # remove this to use mouse left, middle, and right btns to position
         self.disable_mouse()
 
         self.scene.set_scale(4, 4, 4)
@@ -81,11 +80,9 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
 
         self.accept('connect-device', self.connect_input_device)
         self.accept('disconnect-device', self.disconnect_input_device)
-        # self.accept('gamepad-start', self.pause)
-        self.accept('ThirdPersonCam-into-NorthWallCnode', self.collide_north)
-        self.accept('ThirdPersonCam-into-SouthWallCnode', self.collide_south)
-        self.accept('ThirdPersonCam-into-EastWallCnode', self.collide_east)
-        self.accept('ThirdPersonCam-into-WestWallCnode', self.collide_west)
+        # self.accept('gamepad-start', self.pause)  # TODO
+
+        self.accept('fromnode-intonode', self.camera_collide)
 
     def connect_input_device(self, device):
         if not self.gamepad and device.device_class == InputDevice.DeviceClass.gamepad:
@@ -99,25 +96,15 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
             self.detach_input_device(device)
             self.gamepad = None
 
-    def collide_north(self, entry):
+    def camera_collide(self, entry):
         # TODO
-        print(entry)
-        print(self.ninja.get_name())
+        from_node = str(entry.get_from_node_path())
+        into_node = str(entry.get_into_node_path())
+        if 'CameraCnode' in from_node and 'Walls' in into_node:
+            print(entry.get_from_node_path())
+            print(entry.get_into_node_path())
 
-    def collide_south(self, entry):
-        # TODO
-        print(entry)
-        print(self.ninja.get_name())
-
-    def collide_east(self, entry):
-        # TODO
-        print(entry)
-        print(self.ninja.get_name())
-
-    def collide_west(self, entry):
-        # TODO
-        print(entry)
-        print(self.ninja.get_name())
+        _ = self.ninja.get_name()
 
     def check_keys(self):
         if self.is_down(self.left) or InputState.is_set('dpad_left'):
