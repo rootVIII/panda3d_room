@@ -1,7 +1,7 @@
 
 #### Installing source:
 - Navigate to the <code>panda3d_room/</code> directory and then
-create and activate a virtualenv. Install the requirements.
+create and activate a virtualenv. Install the requirements:
 
 <pre><code>pip install -r requirements.txt</code></pre>
 
