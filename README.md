@@ -3,9 +3,7 @@
 - Navigate to the <code>panda3d_room/</code> directory and then
 create and activate a virtualenv. Install the requirements.
 
-<pre><code>python -m venv ./venv
-source venv/Scripts/activate
-pip install -r requirements.txt</code></pre>
+<pre><code>pip install -r requirements.txt</code></pre>
 
 #### Run development:
 
