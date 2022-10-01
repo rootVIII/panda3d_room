@@ -115,19 +115,18 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
             if self.collision_wall == 'North':
                 if heading < 60 or heading > 300:
                     self.zoom_out = True
-                    self.zoom_initial_cam_y = self.camera.get_y()
             elif self.collision_wall == 'South':
                 if 240 > heading > 120:
                     self.zoom_out = True
-                    self.zoom_initial_cam_y = self.camera.get_y()
             elif self.collision_wall == 'East':
                 if 330 > heading > 210:
                     self.zoom_out = True
-                    self.zoom_initial_cam_y = self.camera.get_y()
             elif self.collision_wall == 'West':
                 if 150 > heading > 30:
                     self.zoom_out = True
-                    self.zoom_initial_cam_y = self.camera.get_y()
+
+            if self.zoom_out:
+                self.zoom_initial_cam_y = self.camera.get_y()
         return Task.cont
 
     def camera_zoom(self):
