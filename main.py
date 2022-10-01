@@ -85,7 +85,8 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
 
         self.zoom_in, self.zoom_out, self.focused = False, False, False
         self.collision_wall = None
-        self.zoom_start, self.zoom_initial_cam_y = 0, 0
+        self.zoom_start, self.zoom_initial_cam_y = 0.0, 0.0
+        self.zoom_max = 7.0
         self.task_mgr.add(self.camera_collide, 'CameraCollider')
 
     def connect_input_device(self, device):
@@ -107,11 +108,11 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
             into_node = str(self.camera_handler.entries[0].get_into_node_path())
             self.collision_wall = into_node.split('/')[-1][:4]
             self.zoom_initial_cam_y = self.camera.get_y()
+            self.zoom_start = 0
             self.zoom_in = True
 
-        if self.focused and not self.camera_handler.entries:
+        if self.focused and not self.zoom_out and not self.camera_handler.entries:
             heading = abs(self.ninja.get_h() % 360)
-            print(heading)
             if self.collision_wall == 'North':
                 if heading < 60 or heading > 300:
                     self.zoom_out = True
@@ -126,24 +127,25 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
                     self.zoom_out = True
 
             if self.zoom_out:
+                self.zoom_start = 0
                 self.zoom_initial_cam_y = self.camera.get_y()
         return Task.cont
 
     def camera_zoom(self):
         if self.zoom_in:
-            if self.zoom_start < 7:
-                self.zoom_start += 0.1
+            if self.zoom_start < self.zoom_max:
+                self.zoom_start += 0.2
             else:
-                self.zoom_start = 7
+                self.zoom_start = self.zoom_max
                 self.zoom_in = False
                 self.focused = True
             self.camera.set_pos(self.cam_x, self.zoom_initial_cam_y + self.zoom_start, self.cam_z)
 
         if self.zoom_out:
-            if self.zoom_start < 7:
-                self.zoom_start += 0.1
+            if self.zoom_start < self.zoom_max:
+                self.zoom_start += 0.2
             else:
-                self.zoom_start = 7
+                self.zoom_start = self.zoom_max
                 self.zoom_out = False
                 self.focused = False
                 self.collision_wall = None
