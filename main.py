@@ -83,10 +83,10 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         self.accept('disconnect-device', self.disconnect_input_device)
         # self.accept('gamepad-start', self.pause)  # TODO
 
-        self.accept('fromnode-intonode', self.camera_collide)
-
         self.zoom_in, self.zoom_out = False, False
         self.zoom_start, self.zoom_initial_cam_y = 0, 0
+        self.focused_direction = None
+        self.task_mgr.add(self.camera_collide, 'CameraCollider')
 
     def connect_input_device(self, device):
         if not self.gamepad and device.device_class == InputDevice.DeviceClass.gamepad:
@@ -100,36 +100,27 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
             self.detach_input_device(device)
             self.gamepad = None
 
-    def camera_collide(self, entry):
-        from_node = str(entry.get_from_node_path())
-        into_node = str(entry.get_into_node_path())
-        self.camera.set_pos(self.cam_x, self.cam_y, self.cam_z)
-        if 'CameraCnode' in from_node and 'Walls' in into_node:
-            if not self.zoom_in:
-                self.zoom_initial_cam_y = self.camera.get_y()
-                self.zoom_in = True
-                print(entry.get_from_node_path())
-                print(entry.get_into_node_path())
+    def camera_collide(self, task):
+        _ = task
+        # if self.camera_handler.entries:
+        #     for entry in self.camera_handler.entries:
+        #         print(entry)
+        # return Task.cont
 
-    def camera_zoom(self):
-        if self.zoom_in:
-            if self.zoom_start < 7:
-                self.zoom_start += 0.5
-            else:
-                self.zoom_start = 7
-                self.zoom_in = False
-            self.camera.set_pos(self.cam_x, self.zoom_initial_cam_y + self.zoom_start, self.cam_z)
+        if self.camera_handler.entries:
+            from_node = str(self.camera_handler.entries[0].get_from_node_path())
+            into_node = str(self.camera_handler.entries[0].get_into_node_path())
+            self.camera.set_pos(self.cam_x, self.cam_y, self.cam_z)
+            if 'CameraCnode' in from_node and 'Walls' in into_node:
+                if not self.zoom_in and not self.focused_direction:
+                    self.zoom_initial_cam_y = self.camera.get_y()
+                    self.zoom_in = True
+                    self.focused_direction = into_node.split('/')[-1][:4]
+                    print(self.camera_handler.entries[0].get_from_node_path())
+                    print(self.camera_handler.entries[0].get_into_node_path())
+                    print(self.ninja.get_pos())
 
-        if self.zoom_out:
-            if self.zoom_start > 0:
-                self.zoom_start -= 0.5
-            else:
-                self.zoom_start = 0
-                self.zoom_out = False
-            self.camera.set_pos(self.cam_x, self.zoom_initial_cam_y - self.zoom_start, self.cam_z)
-
-        # TODO: add check to see if cam should zoom out
-        #  and return to the its original postion
+        return Task.cont
 
     def check_keys(self):
         if self.is_down(self.left) or InputState.is_set('dpad_left'):
@@ -177,7 +168,7 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         _ = task
         self.check_keys()
         self.move_ninja()
-        self.camera_zoom()
+        # self.camera_zoom()
         return Task.cont
 
 

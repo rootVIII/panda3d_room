@@ -1,23 +1,22 @@
 from panda3d.core import CollisionTraverser, CollisionHandlerPusher
 from panda3d.core import CollisionNode, CollisionBox, CollisionCapsule
-from panda3d.core import CollisionSphere
+from panda3d.core import CollisionSphere, CollisionHandlerQueue
 
 
 class Collisions:
     def __init__(self):
         self.cTrav = CollisionTraverser()
         self.pusher = CollisionHandlerPusher()
-        self.pusher.add_in_pattern('fromnode-intonode')  # noqa
+        self.camera_handler = CollisionHandlerQueue()
 
     def set_scene_collision_nodes(self, scene):
         # scene.ls()
+
         camera_sphere = CollisionSphere(0.0, 0.0, 0.0, 0.1)
         camera_cnode = self.camera.attach_new_node(CollisionNode('CameraCnode'))  # noqa
         camera_cnode.node().add_solid(camera_sphere)
         camera_cnode.set_pos(0.0, 14.0, 0.0)
-        self.pusher.add_collider(camera_cnode, self.camera)  # noqa
-        # Put FROM objects into traverser:
-        self.cTrav.add_collider(camera_cnode, self.pusher)  # noqa
+        self.cTrav.add_collider(camera_cnode, self.camera_handler)  # noqa
 
         body_capsule = CollisionCapsule(0.0, 0.0, 1.2, 0.0, 0.0, 4.0, 1.5)
         body_cnode = self.ninja.attach_new_node(CollisionNode('BodyCnode'))  # noqa
