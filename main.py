@@ -85,7 +85,7 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
 
         self.accept('fromnode-intonode', self.camera_collide)
 
-        self.zoom_in, self.zoomed_out = False, False
+        self.zoom_in, self.zoom_out = False, False
         self.zoom_start, self.zoom_initial_cam_y = 0, 0
 
     def connect_input_device(self, device):
@@ -115,10 +115,21 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         if self.zoom_in:
             if self.zoom_start < 7:
                 self.zoom_start += 0.5
-            if self.zoom_start > 7:
+            else:
                 self.zoom_start = 7
                 self.zoom_in = False
-            self.camera.set_pos(0, self.zoom_initial_cam_y + self.zoom_start, 9.7)
+            self.camera.set_pos(self.cam_x, self.zoom_initial_cam_y + self.zoom_start, self.cam_z)
+
+        if self.zoom_out:
+            if self.zoom_start > 0:
+                self.zoom_start -= 0.5
+            else:
+                self.zoom_start = 0
+                self.zoom_out = False
+            self.camera.set_pos(self.cam_x, self.zoom_initial_cam_y - self.zoom_start, self.cam_z)
+
+        # TODO: add check to see if cam should zoom out
+        #  and return to the its original postion
 
     def check_keys(self):
         if self.is_down(self.left) or InputState.is_set('dpad_left'):
