@@ -115,6 +115,23 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
 
         return Task.cont
 
+    def camera_zoom(self):
+        if self.zoom_in:
+            if self.zoom_start < 7:
+                self.zoom_start += 0.5
+            else:
+                self.zoom_start = 7
+                self.zoom_in = False
+            self.camera.set_pos(self.cam_x, self.zoom_initial_cam_y + self.zoom_start, self.cam_z)
+
+        if self.zoom_out:
+            if self.zoom_start > 0:
+                self.zoom_start -= 0.5
+            else:
+                self.zoom_start = 0
+                self.zoom_out = False
+            self.camera.set_pos(self.cam_x, self.zoom_initial_cam_y - self.zoom_start, self.cam_z)
+
     def check_keys(self):
         if self.is_down(self.left) or InputState.is_set('dpad_left'):
             self.turn_left()
@@ -161,7 +178,7 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         _ = task
         self.check_keys()
         self.move_ninja()
-        # self.camera_zoom()
+        self.camera_zoom()
         return Task.cont
 
 
