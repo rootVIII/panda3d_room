@@ -110,8 +110,6 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
                 self.zoom_initial_cam_y = self.camera.get_y()
                 self.zoom_in = True
                 self.focused_direction = into_node.split('/')[-1][:4]
-                print(self.focused_direction)
-                print(self.ninja.get_pos())
 
         return Task.cont
 
@@ -131,6 +129,8 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
                 self.zoom_start = 0
                 self.zoom_out = False
             self.camera.set_pos(self.cam_x, self.zoom_initial_cam_y - self.zoom_start, self.cam_z)
+
+        # TODO: add check to see if should zoom out
 
     def check_keys(self):
         if self.is_down(self.left) or InputState.is_set('dpad_left'):
