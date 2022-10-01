@@ -48,7 +48,8 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
 
         self.set_scene_collision_nodes(self.scene)
 
-        self.camera.set_pos(0, -20, 9.7)
+        self.cam_x, self.cam_y, self.cam_z = 0, -20, 9.7
+        self.camera.set_pos(self.cam_x, self.cam_y, self.cam_z)
         self.camera.set_p(-15)
         self.camLens.set_near(12)
 
@@ -84,7 +85,8 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
 
         self.accept('fromnode-intonode', self.camera_collide)
 
-        self.finished_zoom = False
+        self.zoom_in, self.zoomed_out = False, False
+        self.zoom_start, self.zoom_initial_cam_y = 0, 0
 
     def connect_input_device(self, device):
         if not self.gamepad and device.device_class == InputDevice.DeviceClass.gamepad:
@@ -101,12 +103,22 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
     def camera_collide(self, entry):
         from_node = str(entry.get_from_node_path())
         into_node = str(entry.get_into_node_path())
+        self.camera.set_pos(self.cam_x, self.cam_y, self.cam_z)
         if 'CameraCnode' in from_node and 'Walls' in into_node:
-            if not self.finished_zoom:
-                self.camera.set_pos(0, self.camera.get_y() + 7, 9.7)
-                self.finished_zoom = True
+            if not self.zoom_in:
+                self.zoom_initial_cam_y = self.camera.get_y()
+                self.zoom_in = True
                 print(entry.get_from_node_path())
                 print(entry.get_into_node_path())
+
+    def camera_zoom(self):
+        if self.zoom_in:
+            if self.zoom_start < 7:
+                self.zoom_start += 0.5
+            if self.zoom_start > 7:
+                self.zoom_start = 7
+                self.zoom_in = False
+            self.camera.set_pos(0, self.zoom_initial_cam_y + self.zoom_start, 9.7)
 
     def check_keys(self):
         if self.is_down(self.left) or InputState.is_set('dpad_left'):
@@ -154,6 +166,7 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         _ = task
         self.check_keys()
         self.move_ninja()
+        self.camera_zoom()
         return Task.cont
 
 
