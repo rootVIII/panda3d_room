@@ -102,23 +102,16 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
 
     def camera_collide(self, task):
         _ = task
-        # if self.camera_handler.entries:
-        #     for entry in self.camera_handler.entries:
-        #         print(entry)
-        # return Task.cont
 
         if self.camera_handler.entries:
-            from_node = str(self.camera_handler.entries[0].get_from_node_path())
             into_node = str(self.camera_handler.entries[0].get_into_node_path())
             self.camera.set_pos(self.cam_x, self.cam_y, self.cam_z)
-            if 'CameraCnode' in from_node and 'Walls' in into_node:
-                if not self.zoom_in and not self.focused_direction:
-                    self.zoom_initial_cam_y = self.camera.get_y()
-                    self.zoom_in = True
-                    self.focused_direction = into_node.split('/')[-1][:4]
-                    print(self.camera_handler.entries[0].get_from_node_path())
-                    print(self.camera_handler.entries[0].get_into_node_path())
-                    print(self.ninja.get_pos())
+            if not self.zoom_in and not self.focused_direction:
+                self.zoom_initial_cam_y = self.camera.get_y()
+                self.zoom_in = True
+                self.focused_direction = into_node.split('/')[-1][:4]
+                print(self.focused_direction)
+                print(self.ninja.get_pos())
 
         return Task.cont
 
