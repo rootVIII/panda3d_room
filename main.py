@@ -84,7 +84,7 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         # self.accept('gamepad-start', self.pause)  # TODO
 
         self.zoom_in, self.zoom_out, self.focused = False, False, False
-        self.collision_wall = None
+        self.collide_wall = None
         self.zoom_start, self.zoom_initial_cam_y = 0.0, 0.0
         self.zoom_max = 7.0
         self.east_wall, self.west_wall = 7.0, -7.0
@@ -108,7 +108,7 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         _ = task
 
         if self.camera_handler.entries and not self.zoom_in and not self.focused:
-            self.collision_wall = str(self.camera_handler.entries[0].get_into_node_path())
+            self.collide_wall = str(self.camera_handler.entries[0].get_into_node_path())
             self.zoom_initial_cam_y = self.camera.get_y()
             self.zoom_start = 0
             self.zoom_in = True
@@ -116,10 +116,10 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         if self.focused and not self.zoom_out and not self.camera_handler.entries:
             current_x, current_y, _ = self.ninja.get_pos()
             self.zoom_out = True
-            if ('East' in self.collision_wall and current_x > self.east_wall - self.zoom_max) \
-                    or ('West' in self.collision_wall and current_x < self.west_wall + self.zoom_max) \
-                    or ('North' in self.collision_wall and current_y > self.north_wall - self.zoom_max) \
-                    or ('South' in self.collision_wall and current_y < self.south_wall + self.zoom_max):
+            if ('East' in self.collide_wall and current_x > self.east_wall - self.zoom_max) \
+                    or ('West' in self.collide_wall and current_x < self.west_wall + self.zoom_max) \
+                    or ('North' in self.collide_wall and current_y > self.north_wall - self.zoom_max) \
+                    or ('South' in self.collide_wall and current_y < self.south_wall + self.zoom_max):
                 self.zoom_out = False
 
             if self.zoom_out:
@@ -144,7 +144,7 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
                 self.zoom_start = self.zoom_max
                 self.zoom_out = False
                 self.focused = False
-                self.collision_wall = None
+                self.collide_wall = None
             self.camera.set_pos(self.cam_x, self.zoom_initial_cam_y - self.zoom_start, self.cam_z)
 
     def check_keys(self):
