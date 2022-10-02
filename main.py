@@ -5,6 +5,7 @@ from panda3d.core import KeyboardButton, AmbientLight, InputDevice
 from panda3d.core import DirectionalLight, WindowProperties
 from components.ninja import Ninja
 from components.collisions import Collisions
+# rootVIII
 
 
 class Panda3dRoom(ShowBase, Ninja, Collisions):
@@ -153,7 +154,8 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
                 self.zoom_start += 0.2
             else:
                 self.zoom_start = self.zoom_max
-                self.zoom_out, self.focused = False, False
+                self.zoom_out = False
+                self.focused = False
                 self.collision_wall = None
             self.camera.set_pos(self.cam_x, self.zoom_initial_cam_y - self.zoom_start, self.cam_z)
 
