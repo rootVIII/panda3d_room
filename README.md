@@ -1,10 +1,18 @@
 
-#### Installing source:
+#### Installing Panda3d source for Windows or Ubuntu:
 - Navigate to the <code>panda3d_room/</code> directory and then
 create and activate a virtualenv. Install the requirements:
 
 <pre><code>pip install -r requirements.txt</code></pre>
 
+- If on Ubuntu, these libraries may be required:
+<pre><code>sudo apt-get install build-essential pkg-config \
+    fakeroot python3-dev libpng-dev libjpeg-dev libtiff-dev \
+    zlib1g-dev libssl-dev libx11-dev libgl1-mesa-dev \
+    libxrandr-dev libxxf86dga-dev libxcursor-dev bison flex \
+    libfreetype6-dev libvorbis-dev libeigen3-dev libopenal-dev \
+    libode-dev libbullet-dev nvidia-cg-toolkit libgtk2.0-dev \
+    libassimp-dev libopenexr-dev</code></pre>
 #### Run development:
 
 <pre><code>python main.py</code></pre>
