@@ -5,6 +5,7 @@ from panda3d.core import KeyboardButton, AmbientLight, InputDevice
 from panda3d.core import DirectionalLight, WindowProperties
 from components.ninja import Ninja
 from components.collisions import Collisions
+# rootVIII
 
 
 class Panda3dRoom(ShowBase, Ninja, Collisions):
@@ -33,7 +34,6 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         dir_light_node.set_hpr(60, 0, 90)
         self.render.set_light(dir_light_node)
 
-        # remove this to use mouse left, middle, and right btns to position
         self.disable_mouse()
 
         self.scene.set_scale(4, 4, 4)
@@ -49,11 +49,11 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
 
         self.set_scene_collision_nodes(self.scene)
 
-        self.camera.set_pos(0, -20, 9.7)
+        self.cam_x, self.cam_y, self.cam_z = 0, -20, 9.7
+        self.camera.set_pos(self.cam_x, self.cam_y, self.cam_z)
         self.camera.set_p(-15)
         self.camLens.set_near(12)
 
-        self.task_mgr.add(self.update, 'Update')
         self.is_down = self.mouseWatcherNode.is_button_down
 
         self.up = KeyboardButton.up()
@@ -81,11 +81,16 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
 
         self.accept('connect-device', self.connect_input_device)
         self.accept('disconnect-device', self.disconnect_input_device)
-        # self.accept('gamepad-start', self.pause)
-        self.accept('ThirdPersonCam-into-NorthWallCnode', self.collide_north)
-        self.accept('ThirdPersonCam-into-SouthWallCnode', self.collide_south)
-        self.accept('ThirdPersonCam-into-EastWallCnode', self.collide_east)
-        self.accept('ThirdPersonCam-into-WestWallCnode', self.collide_west)
+        # self.accept('gamepad-start', self.pause)  # TODO
+
+        self.zoom_in, self.zoom_out, self.focused = False, False, False
+        self.collision_wall = None
+        self.zoom_start, self.zoom_initial_cam_y = 0.0, 0.0
+        self.zoom_max = 7.0
+        self.east_wall, self.west_wall = 7.0, -7.0
+        self.north_wall, self.south_wall = 16.0, -13.0
+        self.task_mgr.add(self.camera_collide, 'CameraCollider')
+        self.task_mgr.add(self.update, 'Update')
 
     def connect_input_device(self, device):
         if not self.gamepad and device.device_class == InputDevice.DeviceClass.gamepad:
@@ -99,25 +104,60 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
             self.detach_input_device(device)
             self.gamepad = None
 
-    def collide_north(self, entry):
-        # TODO
-        print(entry)
-        print(self.ninja.get_name())
+    def at_zoom_max_x(self, wall):
+        return abs(wall - self.ninja.get_x()) >= self.zoom_max
 
-    def collide_south(self, entry):
-        # TODO
-        print(entry)
-        print(self.ninja.get_name())
+    def at_zoom_max_y(self, wall):
+        return abs(wall - self.ninja.get_y()) >= self.zoom_max
 
-    def collide_east(self, entry):
-        # TODO
-        print(entry)
-        print(self.ninja.get_name())
+    def camera_collide(self, task):
+        _ = task
 
-    def collide_west(self, entry):
-        # TODO
-        print(entry)
-        print(self.ninja.get_name())
+        if self.camera_handler.entries and not self.zoom_in and not self.focused:
+            self.collision_wall = str(self.camera_handler.entries[0].get_into_node_path())
+            self.zoom_initial_cam_y = self.camera.get_y()
+            self.zoom_start = 0
+            self.zoom_in = True
+
+        if self.focused and not self.zoom_out and not self.camera_handler.entries:
+            heading = abs(self.ninja.get_h() % 360)
+            if 'North' in self.collision_wall and \
+                    ((heading < 90 or heading > 270) or self.at_zoom_max_y(self.north_wall)):
+                self.zoom_out = True
+            elif 'South' in self.collision_wall and \
+                    ((90 < heading < 270) or self.at_zoom_max_y(self.at_zoom_max_y(self.south_wall))):
+                self.zoom_out = True
+            elif 'East' in self.collision_wall and \
+                    ((360 > heading > 180) or self.at_zoom_max_x(self.east_wall)):
+                self.zoom_out = True
+            elif 'West' in self.collision_wall and \
+                    ((0 < heading < 180) or self.at_zoom_max_x(self.west_wall)):
+                self.zoom_out = True
+
+            if self.zoom_out:
+                self.zoom_start = 0
+                self.zoom_initial_cam_y = self.camera.get_y()
+        return Task.cont
+
+    def camera_zoom(self):
+        if self.zoom_in:
+            if self.zoom_start < self.zoom_max:
+                self.zoom_start += 0.2
+            else:
+                self.zoom_start = self.zoom_max
+                self.zoom_in = False
+                self.focused = True
+            self.camera.set_pos(self.cam_x, self.zoom_initial_cam_y + self.zoom_start, self.cam_z)
+
+        if self.zoom_out:
+            if self.zoom_start < self.zoom_max:
+                self.zoom_start += 0.2
+            else:
+                self.zoom_start = self.zoom_max
+                self.zoom_out = False
+                self.focused = False
+                self.collision_wall = None
+            self.camera.set_pos(self.cam_x, self.zoom_initial_cam_y - self.zoom_start, self.cam_z)
 
     def check_keys(self):
         if self.is_down(self.left) or InputState.is_set('dpad_left'):
@@ -165,6 +205,7 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         _ = task
         self.check_keys()
         self.move_ninja()
+        self.camera_zoom()
         return Task.cont
 
 
