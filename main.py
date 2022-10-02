@@ -45,7 +45,7 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         new_ninja_pos[2] -= 0.4
         self.ninja.set_pos(new_ninja_pos)
 
-        self.tmp_node = self.render.attach_new_node('ThirdPersonCam')  # noqa
+        self.dummy_cam_node = self.render.attach_new_node('ThirdPersonCam')  # noqa
 
         self.set_scene_collision_nodes(self.scene)
 
@@ -115,19 +115,8 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
 
         if self.focused and not self.zoom_out and not self.camera_handler.entries:
             current_x, current_y, _ = self.ninja.get_pos()
-
-            heading = abs(self.ninja.get_h() % 360)
-            if 'North' in self.collide_wall:
-                if (heading < 90 or heading > 270) or current_y < self.north_wall - self.zoom_max:
-                    self.zoom_out = True
-            elif 'South' in self.collide_wall:
-                if (90 < heading < 270) or current_y > self.south_wall + self.zoom_max:
-                    self.zoom_out = True
-            elif 'East' in self.collide_wall:
-                if (360 > heading > 180) or current_x < self.east_wall - self.zoom_max:
-                    self.zoom_out = True
-            elif 'West' in self.collide_wall:
-                if (0 < heading < 180) or current_x > self.west_wall + self.zoom_max:
+            if self.west_wall + 4 < current_x < self.east_wall - 4:
+                if self.north_wall - 4 > current_y > self.south_wall + 4:
                     self.zoom_out = True
 
             if self.zoom_out:
@@ -191,11 +180,11 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
             self.ninja.set_x(self.ninja, 0.1)
 
         self.ninja.set_h(self.ninja_heading)  # noqa
-        self.tmp_node.set_pos(self.ninja.get_pos())  # noqa
-        heading = self.tmp_node.get_h()
+        self.dummy_cam_node.set_pos(self.ninja.get_pos())  # noqa
+        heading = self.dummy_cam_node.get_h()
         turn_diff = self.ninja.get_h() - heading  # noqa
-        self.tmp_node.set_h(heading + turn_diff * self.turn_rate)
-        self.camera.reparent_to(self.tmp_node)
+        self.dummy_cam_node.set_h(heading + turn_diff * self.turn_rate)
+        self.camera.reparent_to(self.dummy_cam_node)
 
     def update(self, task):
         _ = task
