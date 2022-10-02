@@ -26,10 +26,11 @@ above command. Double-click the build/panda3d_room.exe
 to open the app.
 
 #### 3d-models
-- The glb/gltf files in assets/ were converted
-to bam by activating the venv and running:
+- The <code>.glb</code> files in <code>assets/</code> were converted
+to bam by activating the venv and running <code>gltf2bam</code>:
 
-<pre><code>gltf2bam assets/ninja.glb assets/ninja.bam</code></pre>
+<pre><code>gltf2bam assets/ninja.glb assets/ninja.bam
+gltf2bam assets/Home2_Night.glb assets/Home2_Night.bam</code></pre>
 
 #### Keyboard controls:
 <pre><code>s       -> punch
