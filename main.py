@@ -120,19 +120,13 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
             self.zoom_in = True
 
         if self.focused and not self.zoom_out and not self.camera_handler.entries:
-            heading = abs(self.ninja.get_h() % 360)
-            if 'North' in self.collision_wall and \
-                    ((heading < 90 or heading > 270) or self.at_zoom_max_y(self.north_wall)):
-                self.zoom_out = True
-            elif 'South' in self.collision_wall and \
-                    ((90 < heading < 270) or self.at_zoom_max_y(self.at_zoom_max_y(self.south_wall))):
-                self.zoom_out = True
-            elif 'East' in self.collision_wall and \
-                    ((360 > heading > 180) or self.at_zoom_max_x(self.east_wall)):
-                self.zoom_out = True
-            elif 'West' in self.collision_wall and \
-                    ((0 < heading < 180) or self.at_zoom_max_x(self.west_wall)):
-                self.zoom_out = True
+            current_x, current_y, _ = self.ninja.get_pos()
+            self.zoom_out = True
+            if ('East' in self.collision_wall and current_x > self.east_wall - self.zoom_max) \
+                    or ('West' in self.collision_wall and current_x < self.west_wall + self.zoom_max) \
+                    or ('North' in self.collision_wall and current_y > self.north_wall - self.zoom_max) \
+                    or ('South' in self.collision_wall and current_y < self.south_wall + self.zoom_max):
+                self.zoom_out = False
 
             if self.zoom_out:
                 self.zoom_start = 0
