@@ -84,7 +84,7 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         # self.accept('gamepad-start', self.pause)  # TODO
 
         self.zoom_in, self.zoom_out, self.focused = False, False, False
-        self.collision_wall = None
+        self.collision_wall, self.collision_pos = None, None
         self.zoom_start, self.zoom_initial_cam_y = 0.0, 0.0
         self.zoom_max = 7.0
         self.task_mgr.add(self.camera_collide, 'CameraCollider')
@@ -110,22 +110,18 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
             self.zoom_initial_cam_y = self.camera.get_y()
             self.zoom_start = 0
             self.zoom_in = True
+            self.collision_pos = self.ninja.get_pos()
 
         if self.focused and not self.zoom_out and not self.camera_handler.entries:
             heading = abs(self.ninja.get_h() % 360)
-            print(self.collision_wall)
-            if 'North' in self.collision_wall:
-                if heading < 60 or heading > 300:
-                    self.zoom_out = True
-            elif 'South' in self.collision_wall:
-                if 90 < heading < 270:
-                    self.zoom_out = True
-            elif 'East' in self.collision_wall:
-                if 330 > heading > 210:
-                    self.zoom_out = True
-            elif 'West' in self.collision_wall:
-                if 150 > heading > 30:
-                    self.zoom_out = True
+            if 'North' in self.collision_wall and heading < 90 or heading > 270:
+                self.zoom_out = True
+            elif 'South' in self.collision_wall and 90 < heading < 270:
+                self.zoom_out = True
+            elif 'East' in self.collision_wall and 360 > heading > 180:
+                self.zoom_out = True
+            elif 'West' in self.collision_wall and 0 < heading < 180:
+                self.zoom_out = True
 
             if self.zoom_out:
                 self.zoom_start = 0
@@ -147,9 +143,8 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
                 self.zoom_start += 0.2
             else:
                 self.zoom_start = self.zoom_max
-                self.zoom_out = False
-                self.focused = False
-                self.collision_wall = None
+                self.zoom_out, self.focused = False, False
+                self.collision_wall, self.collision_pos = None, None
             self.camera.set_pos(self.cam_x, self.zoom_initial_cam_y - self.zoom_start, self.cam_z)
 
     def check_keys(self):
