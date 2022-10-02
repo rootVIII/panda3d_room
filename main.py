@@ -104,12 +104,6 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
             self.detach_input_device(device)
             self.gamepad = None
 
-    def at_zoom_max_x(self, wall):
-        return abs(wall - self.ninja.get_x()) >= self.zoom_max
-
-    def at_zoom_max_y(self, wall):
-        return abs(wall - self.ninja.get_y()) >= self.zoom_max
-
     def camera_collide(self, task):
         _ = task
 
