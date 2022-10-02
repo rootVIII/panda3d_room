@@ -101,12 +101,17 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
             self.detach_input_device(device)
             self.gamepad = None
 
+    def at_zoom_max_x(self):
+        return abs(self.collision_pos.x - self.ninja.get_x()) >= self.zoom_max
+
+    def at_zoom_max_y(self):
+        return abs(self.collision_pos.y - self.ninja.get_y()) >= self.zoom_max
+
     def camera_collide(self, task):
         _ = task
 
         if self.camera_handler.entries and not self.zoom_in and not self.focused:
-            into_node = str(self.camera_handler.entries[0].get_into_node_path())
-            self.collision_wall = into_node.split('/')[-1]
+            self.collision_wall = str(self.camera_handler.entries[0].get_into_node_path())
             self.zoom_initial_cam_y = self.camera.get_y()
             self.zoom_start = 0
             self.zoom_in = True
@@ -114,13 +119,13 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
 
         if self.focused and not self.zoom_out and not self.camera_handler.entries:
             heading = abs(self.ninja.get_h() % 360)
-            if 'North' in self.collision_wall and heading < 90 or heading > 270:
+            if 'North' in self.collision_wall and ((heading < 90 or heading > 270) or self.at_zoom_max_y()):
                 self.zoom_out = True
-            elif 'South' in self.collision_wall and 90 < heading < 270:
+            elif 'South' in self.collision_wall and ((90 < heading < 270) or self.at_zoom_max_y()):
                 self.zoom_out = True
-            elif 'East' in self.collision_wall and 360 > heading > 180:
+            elif 'East' in self.collision_wall and ((360 > heading > 180) or self.at_zoom_max_x()):
                 self.zoom_out = True
-            elif 'West' in self.collision_wall and 0 < heading < 180:
+            elif 'West' in self.collision_wall and ((0 < heading < 180) or self.at_zoom_max_x()):
                 self.zoom_out = True
 
             if self.zoom_out:
