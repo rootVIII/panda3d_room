@@ -2,7 +2,7 @@ from direct.showbase.ShowBase import ShowBase  # noqa
 from direct.showbase.InputStateGlobal import inputState as InputState  # noqa
 from direct.task import Task  # noqa
 from panda3d.core import KeyboardButton, AmbientLight, InputDevice
-from panda3d.core import DirectionalLight, WindowProperties
+from panda3d.core import DirectionalLight, WindowProperties, Point3
 from components.ninja import Ninja
 from components.collisions import Collisions
 # rootVIII
@@ -115,9 +115,32 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
 
         if self.focused and not self.zoom_out and not self.camera_handler.entries:
             current_x, current_y, _ = self.ninja.get_pos()
-            if self.west_wall + 5 < current_x < self.east_wall - 5:
-                if self.north_wall - 5 > current_y > self.south_wall + 5:
-                    self.zoom_out = True
+
+            ninja_point = Point3(self.ninja.get_x(), self.ninja.get_y(), 0.0)
+
+            directions = {
+                'East': Point3(self.east_wall, self.ninja.get_y(), 0.0),
+                'West': Point3(self.west_wall, self.ninja.get_y(), 0.0),
+                'North': Point3(self.ninja.get_x(), self.north_wall, 0.0),
+                'South': Point3(self.ninja.get_x(), self.south_wall, 0.0)
+            }
+            smallest = 100000
+            nearest = None
+            for key, val in directions.items():
+                result = (ninja_point.get_xy() - val.get_xy()).length()
+                if result < smallest:
+                    smallest = result
+                    nearest = key
+
+            heading = abs(self.ninja.get_h() % 360)
+            if nearest == 'North' and (heading < 90 or heading > 270):
+                self.zoom_out = True
+            elif nearest == 'South' and (90 < heading < 270):
+                self.zoom_out = True
+            elif nearest == 'East' and (360 > heading > 180):
+                self.zoom_out = True
+            elif nearest == 'West' and (0 < heading < 180):
+                self.zoom_out = True
 
             if self.zoom_out:
                 self.zoom_start = 0
