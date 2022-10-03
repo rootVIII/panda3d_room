@@ -84,7 +84,6 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         # self.accept('gamepad-start', self.pause)  # TODO
 
         self.zoom_in, self.zoom_out, self.focused = False, False, False
-        self.collide_wall = None
         self.zoom_start, self.zoom_initial_cam_y = 0.0, 0.0
         self.zoom_max = 7.0
         self.east_wall, self.west_wall = 7.0, -7.0
@@ -108,14 +107,11 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         _ = task
 
         if self.camera_handler.entries and not self.zoom_in and not self.focused:
-            self.collide_wall = str(self.camera_handler.entries[0].get_into_node_path())
             self.zoom_initial_cam_y = self.camera.get_y()
             self.zoom_start = 0
             self.zoom_in = True
 
         if self.focused and not self.zoom_out and not self.camera_handler.entries:
-            current_x, current_y, _ = self.ninja.get_pos()
-
             ninja_point = Point3(self.ninja.get_x(), self.ninja.get_y(), 0.0)
 
             directions = {
@@ -164,7 +160,6 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
                 self.zoom_start = self.zoom_max
                 self.zoom_out = False
                 self.focused = False
-                self.collide_wall = None
             self.camera.set_pos(self.cam_x, self.zoom_initial_cam_y - self.zoom_start, self.cam_z)
 
     def check_keys(self):
