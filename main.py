@@ -52,7 +52,7 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
         self.cam_x, self.cam_y, self.cam_z = 0, -20, 9.7
         self.camera.set_pos(self.cam_x, self.cam_y, self.cam_z)
         self.camera.set_p(-15)
-        self.camLens.set_near(12)
+        self.camLens.set_near(10)
 
         self.is_down = self.mouseWatcherNode.is_button_down
 
@@ -115,8 +115,8 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
 
         if self.focused and not self.zoom_out and not self.camera_handler.entries:
             current_x, current_y, _ = self.ninja.get_pos()
-            if self.west_wall + 4 < current_x < self.east_wall - 4:
-                if self.north_wall - 4 > current_y > self.south_wall + 4:
+            if self.west_wall + 5 < current_x < self.east_wall - 5:
+                if self.north_wall - 5 > current_y > self.south_wall + 5:
                     self.zoom_out = True
 
             if self.zoom_out:
