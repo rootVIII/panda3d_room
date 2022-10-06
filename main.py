@@ -103,6 +103,15 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
             self.detach_input_device(device)
             self.gamepad = None
 
+    def get_wall_distances(self):
+        ninja_xy = Point3(self.ninja.get_x(), self.ninja.get_y(), 0.0).get_xy()
+        return sorted([
+            ('East', (ninja_xy - Point3(self.east_wall, self.ninja.get_y(), 0.0).get_xy()).length()),
+            ('West', (ninja_xy - Point3(self.west_wall, self.ninja.get_y(), 0.0).get_xy()).length()),
+            ('North', (ninja_xy - Point3(self.ninja.get_x(), self.north_wall, 0.0).get_xy()).length()),
+            ('South', (ninja_xy - Point3(self.ninja.get_x(), self.south_wall, 0.0).get_xy()).length())
+        ], key=lambda point: point[1])
+
     def camera_collide(self, task):
         _ = task
 
@@ -112,35 +121,23 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
             self.zoom_in = True
 
         if self.focused and not self.zoom_out and not self.camera_handler.entries:
-            ninja_point = Point3(self.ninja.get_x(), self.ninja.get_y(), 0.0)
+            nearest, adjacent = self.get_wall_distances()[:2]
+            nearest_wall, nearest_distance = nearest
+            adjacent_wall, adjacent_distance = adjacent
+            if (adjacent_distance - nearest_distance) > (self.zoom_max - 4):
+                heading = abs(self.ninja.get_h() % 360)
+                if nearest_wall == 'North' and (heading < 90 or heading > 270):
+                    self.zoom_out = True
+                elif nearest_wall == 'South' and (90 < heading < 270):
+                    self.zoom_out = True
+                elif nearest_wall == 'East' and (360 > heading > 180):
+                    self.zoom_out = True
+                elif nearest_wall == 'West' and (0 < heading < 180):
+                    self.zoom_out = True
 
-            directions = {
-                'East': Point3(self.east_wall, self.ninja.get_y(), 0.0),
-                'West': Point3(self.west_wall, self.ninja.get_y(), 0.0),
-                'North': Point3(self.ninja.get_x(), self.north_wall, 0.0),
-                'South': Point3(self.ninja.get_x(), self.south_wall, 0.0)
-            }
-            smallest = 100000
-            nearest = None
-            for key, val in directions.items():
-                result = (ninja_point.get_xy() - val.get_xy()).length()
-                if result < smallest:
-                    smallest = result
-                    nearest = key
-
-            heading = abs(self.ninja.get_h() % 360)
-            if nearest == 'North' and (heading < 90 or heading > 270):
-                self.zoom_out = True
-            elif nearest == 'South' and (90 < heading < 270):
-                self.zoom_out = True
-            elif nearest == 'East' and (360 > heading > 180):
-                self.zoom_out = True
-            elif nearest == 'West' and (0 < heading < 180):
-                self.zoom_out = True
-
-            if self.zoom_out:
-                self.zoom_start = 0
-                self.zoom_initial_cam_y = self.camera.get_y()
+                if self.zoom_out:
+                    self.zoom_start = 0
+                    self.zoom_initial_cam_y = self.camera.get_y()
         return Task.cont
 
     def camera_zoom(self):
