@@ -126,13 +126,10 @@ class Panda3dRoom(ShowBase, Ninja, Collisions):
             adjacent_wall, adjacent_distance = adjacent
             if (adjacent_distance - nearest_distance) > (self.zoom_max - 4):
                 heading = abs(self.ninja.get_h() % 360)
-                if nearest_wall == 'North' and (heading < 90 or heading > 270):
-                    self.zoom_out = True
-                elif nearest_wall == 'South' and (90 < heading < 270):
-                    self.zoom_out = True
-                elif nearest_wall == 'East' and (360 > heading > 180):
-                    self.zoom_out = True
-                elif nearest_wall == 'West' and (0 < heading < 180):
+                if (nearest_wall == 'North' and (heading < 90 or heading > 270)) \
+                        or (nearest_wall == 'South' and (90 < heading < 270)) \
+                        or (nearest_wall == 'East' and (360 > heading > 180)) \
+                        or (nearest_wall == 'West' and (0 < heading < 180)):
                     self.zoom_out = True
 
                 if self.zoom_out:
