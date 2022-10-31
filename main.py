@@ -3,9 +3,13 @@ from direct.showbase.InputStateGlobal import inputState as InputState  # noqa
 from direct.task import Task  # noqa
 from panda3d.core import KeyboardButton, AmbientLight, InputDevice
 from panda3d.core import DirectionalLight, WindowProperties, Point3
+from panda3d.core import load_prc_file_data
 from components.ninja import Ninja
 from components.collisions import Collisions
 # rootVIII
+
+
+load_prc_file_data('', 'framebuffer-multisample 1, multisamples 2')
 
 
 class Panda3dRoom(ShowBase, Ninja, Collisions):
