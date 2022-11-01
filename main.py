@@ -9,7 +9,9 @@ from components.collisions import Collisions
 # rootVIII
 
 
-load_prc_file_data('', 'framebuffer-multisample 1, multisamples 2')
+load_prc_file_data('', 'framebuffer-multisample 1,'
+                       'multisamples 2,'
+                       'threading-model Cull/Draw')
 
 
 class Panda3dRoom(ShowBase, Ninja, Collisions):
